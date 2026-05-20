@@ -4,58 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ✏️  사이트 제목을 여기서 바꾸세요 -->
-<title>캠페인 이름</title>
+<!-- ✏️ 사이트 제목을 여기서 바꾸세요 -->
+<title>Campaign Name</title>
 
-<!-- 구글 폰트 -->
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- 스타일시트 -->
+<!-- 스타일시트 로드 순서:
+     style.css         — 전역 레이아웃·컴포넌트 공통 스타일
+     combat_arena.css  — 대련장(Sparring) 전용 스타일
+     raid.css          — 사흉수 토벌(Raid) 전용 스타일                     -->
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="combat_arena.css">
 <link rel="stylesheet" href="raid.css">
 
-<!-- 외부 라이브러리 -->
+<!-- 외부 라이브러리
+     Supabase JS v2  — DB / Auth / Realtime 채널
+     Chart.js        — 레이더 차트 / 주식 그래프                           -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- JS 파일 로드 순서: Config → Radar → Character → Auth → UI → Features → Combat -->
-<!-- defer = HTML 파싱 완료 후 실행 (순서가 중요합니다) -->
-<script src="Config.js"    defer></script>
-<script src="Radar.js"     defer></script>
-<script src="Map.js"  defer></script>
-<script src="Character.js" defer></script>
-<script src="Auth.js"      defer></script>
-<script src="UI.js"        defer></script>
-<script src="Features.js"  defer></script>
-<script src="Combat.js"  defer></script>
+<!-- JS 로드 순서 (defer = HTML 파싱 완료 후 순서대로 실행)
+     Config.js                  — Supabase 키, 캐릭터 목록, charOwners 맵
+     Radar.js                   — 레이더(거미줄) 차트 렌더링
+     Map.js                     — 관계도 SVG 노드/엣지 렌더링
+     Character.js               — 캐릭터 페이지 DOM 생성, 능력치 표시
+     Auth.js                    — 로그인/로그아웃, 세션 관리
+     UI.js                      — 탭 전환, 슬라이더, 라이트박스 등 UI 유틸
+     Features.js                — 상점, 미니게임, 갤러리, 우편 등 기능
+     Combat.js                  — 1:1 대련 / 단체전 전투 시스템
+     Character_combat_patch.js  — 전투 시스템 캐릭터 데이터 연동 패치
+     Myroom.js                  — 등각투영 마이룸 꾸미기 시스템
+     Raid.js                    — 사흉수 토벌 레이드 시스템                 -->
+<script src="Config.js"                   defer></script>
+<script src="Radar.js"                    defer></script>
+<script src="Map.js"                      defer></script>
+<script src="Character.js"               defer></script>
+<script src="Auth.js"                    defer></script>
+<script src="UI.js"                      defer></script>
+<script src="Features.js"               defer></script>
+<script src="Combat.js"                  defer></script>
 <script src="Character_combat_patch.js"  defer></script>
-<script src="Myroom.js" defer></script>
-<script src="Raid.js" defer></script>
+<script src="Myroom.js"                  defer></script>
+<script src="Raid.js"                    defer></script>
 </head>
 
 <body>
 
-<!-- ══ 배경 파티클 컨테이너 (JS로 자동 생성) ══ -->
+<!-- 배경 파티클 컨테이너 (createDust() 함수가 JS로 자동 생성) -->
 <div id="dust-container"></div>
 
 <div class="container">
 
-  <!-- ══ 상단 배너 이미지 ══ -->
-  <!-- ✏️  src를 실제 배너 이미지 URL로 교체하세요 -->
+  <!-- ══════════════════════════════════════════════
+       상단 배너 이미지
+       ✏️ src를 실제 배너 이미지 URL로 교체하세요
+  ══════════════════════════════════════════════ -->
   <div class="header-banner">
     <img src="https://placehold.co/1200x200/111111/555555?text=Campaign+Banner" alt="배너">
   </div>
 
   <div class="content-row">
 
-    <!-- ══ 왼쪽 사이드바 ══ -->
+    <!-- ══════════════════════════════════════════════
+         왼쪽 사이드바
+    ══════════════════════════════════════════════ -->
     <div class="sidebar-column">
       <aside class="sidebar">
 
-        <!-- 사이드바 대표 이미지 / 로고 -->
-        <!-- ✏️  src를 실제 로고 이미지로 교체하세요 -->
+        <!-- 사이드바 대표 이미지 / 로고
+             클릭 시 Home 탭으로 이동
+             ✏️ src를 실제 로고 이미지 URL로 교체하세요 -->
         <img
           src="https://placehold.co/140x140/111111/555555?text=Logo"
           class="profile-img"
@@ -64,13 +84,16 @@
           alt="로고"
         >
 
-        <!-- ✏️  사이트 제목과 소개 문구를 바꾸세요 -->
-        <h1 class="char-name">캠페인 제목</h1>
-        <p class="sidebar-sub">캠페인 한 줄 소개를 여기에 입력하세요.</p>
-        <p class="sidebar-sub">두 번째 소개 문구.</p>
+        <!-- ✏️ 사이트 제목·소개 문구를 수정하세요 -->
+        <h1 class="char-name">Campaign Title</h1>
+        <p class="sidebar-sub">Campaign tagline goes here.</p>
+        <p class="sidebar-sub">Second description line.</p>
         <p class="sidebar-sub sidebar-sub--spaced">since 2025.01.01</p>
 
-        <!-- 글로벌 타임라인 선택기 (관리자만 변경 가능하도록 Features.js에서 처리) -->
+        <!-- 글로벌 타임라인 선택기
+             관리자가 현재 주 타임라인(챕터)을 설정하면
+             캐릭터 탭이 자동으로 해당 챕터 데이터를 표시한다.
+             setGlobalPhase() 함수는 하단 인라인 스크립트에 정의.    -->
         <div style="margin:15px 0; padding:10px; background:rgba(255,255,255,0.03);
                     border:1px solid rgba(255,255,255,0.1); border-radius:8px; text-align:center;">
           <span style="color:#aaa; font-size:0.85rem; display:block; margin-bottom:5px;">Current Timeline</span>
@@ -86,52 +109,59 @@
           </select>
         </div>
 
-        <!-- 외부 링크 버튼 (예: TRPG 툴 연결) -->
-        <!-- ✏️  href를 실제 URL로 교체하세요 -->
+        <!-- 외부 링크 버튼 (예: TRPG 툴, 디스코드 등)
+             ✏️ href를 실제 URL로 교체하세요 -->
         <a href="https://example.com" class="link-btn" target="_blank">External Link</a>
 
-        <!-- BGM 플레이어 (유튜브 임베드) -->
-        <!-- ✏️  src의 유튜브 영상 ID 부분을 바꾸세요 -->
+        <!-- BGM 플레이어 (유튜브 자동재생 iframe)
+             ✏️ 두 곳의 영상 ID를 실제 YouTube ID로 교체하세요 -->
         <div class="music-player">
           <iframe
             class="youtube-frame"
-            src="https://www.youtube.com/embed/여기에_유튜브_영상_ID?loop=1&playlist=여기에_유튜브_영상_ID"
+            src="https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?loop=1&playlist=YOUTUBE_VIDEO_ID"
             title="BGM"
             frameborder="0"
             allow="autoplay"
             allowfullscreen
           ></iframe>
-          <div class="music-title">BGM 제목</div>
-          <div class="music-artist">아티스트명</div>
+          <div class="music-title">BGM Title</div>
+          <div class="music-artist">Artist Name</div>
         </div>
 
       </aside><!-- /sidebar -->
 
-      <!-- 로그인 / 로그아웃 버튼 -->
+      <!-- 로그인 / 로그아웃 버튼
+           Auth.js의 checkLoginState()가 세션에 따라 표시/숨김 처리 -->
       <div class="auth-nav-area">
         <button id="login-btn"  class="eternal-btn">LOGIN</button>
         <button id="logout-btn" class="eternal-btn" style="display:none;">LOGOUT</button>
       </div>
 
-      <!-- 캐릭터 썸네일 목록 (사이드바 하단) -->
-      <!-- ✏️  각 이미지의 src와 onclick 함수의 'char-ID'를 실제 캐릭터 ID로 맞추세요 -->
+      <!-- 캐릭터 썸네일 목록
+           ✏️ src 이미지와 onclick의 'char-ID' 값을
+               Config.js의 charData ID와 일치시키세요.
+           더미 데이터: 가나, 나다, 다라, 라마 4인 -->
       <div class="character-section">
-        <img src="https://placehold.co/90x90/111111/666666?text=가나다" class="character-img" alt="가나다" onclick="openTab('char-가나')">
-        <img src="https://placehold.co/90x90/111111/666666?text=다라마" class="character-img" alt="다라마" onclick="openTab('char-다라')">
-        <img src="https://placehold.co/90x90/111111/666666?text=마바사" class="character-img" alt="마바사" onclick="openTab('char-마바')">
-        <img src="https://placehold.co/90x90/111111/666666?text=사아자" class="character-img" alt="사아자" onclick="openTab('char-사아')">
+        <img src="https://placehold.co/90x90/111111/666666?text=가나" class="character-img" alt="가나" onclick="openTab('char-p1')">
+        <img src="https://placehold.co/90x90/111111/666666?text=나다" class="character-img" alt="나다" onclick="openTab('char-p2')">
+        <img src="https://placehold.co/90x90/111111/666666?text=다라" class="character-img" alt="다라" onclick="openTab('char-p3')">
+        <img src="https://placehold.co/90x90/111111/666666?text=라마" class="character-img" alt="라마" onclick="openTab('char-p4')">
       </div>
 
-      <!-- 캘린더 (buildCalendar 함수로 자동 생성) -->
+      <!-- 캘린더 (buildCalendar() 함수가 자동으로 렌더링) -->
       <div class="calendar" id="calendar"></div>
 
     </div><!-- /sidebar-column -->
 
 
-    <!-- ══ 메인 콘텐츠 영역 ══ -->
+    <!-- ══════════════════════════════════════════════
+         메인 콘텐츠 영역
+    ══════════════════════════════════════════════ -->
     <main class="main-content">
 
-      <!-- 상단 탭 네비게이션 (영문으로 표시) -->
+      <!-- 상단 탭 네비게이션 (영문 레이블)
+           openTab(섹션ID, 버튼요소) — UI.js에 정의
+           updateShopMoneyDisplay()  — Features.js에 정의           -->
       <nav class="nav-tabs">
         <button class="nav-btn active" onclick="openTab('home',this)">Home</button>
         <button class="nav-btn" onclick="openTab('Backup',this)">Records</button>
@@ -140,15 +170,19 @@
         <button class="nav-btn" onclick="openTab('relations',this)">Relations</button>
         <button class="nav-btn" onclick="openTab('Shop',this); updateShopMoneyDisplay();">Shop</button>
         <button class="nav-btn" onclick="openTab('MiniGames',this); updateShopMoneyDisplay();">Games</button>
+        <!-- 대련장: Combat.js의 CombatSys.switchMode() 호출 -->
+        <button class="nav-btn" onclick="openTab('Sparring',this)">Arena</button>
+        <!-- 숙소: MyRoomSys.loadVisitList()로 이웃 목록 표시 시작 -->
+        <button class="nav-btn" onclick="openTab('MyRoom',this); if(typeof MyRoomSys!=='undefined') MyRoomSys.loadVisitList();">Room</button>
       </nav>
 
 
-      <!-- ══════════════════════════════════════════════
-           대문 (Home) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Home 섹션 — 챕터별 소개 슬라이더
+      ════════════════════════════════════════ -->
       <section id="home" class="content-card active">
 
-        <!-- 챕터 탭 -->
+        <!-- 챕터 탭 버튼 (goToHomeSlide = UI.js) -->
         <div class="phase-tabs" id="home-tabs">
           <button class="phase-btn active" onclick="goToHomeSlide(0)">Chapter 1</button>
           <button class="phase-btn" onclick="goToHomeSlide(1)">Chapter 2</button>
@@ -156,33 +190,33 @@
           <button class="phase-btn" onclick="goToHomeSlide(3)">Chapter 4</button>
         </div>
 
-        <!-- 이미지 슬라이더 -->
+        <!-- 이미지 슬라이더
+             moveHomeSlide(±1) — UI.js에 정의             -->
         <div class="home-slider-wrapper">
           <button class="home-arrow prev" onclick="moveHomeSlide(-1)">&#10094;</button>
           <div class="home-slider-viewport">
             <div class="home-slider-track" id="home-track">
 
-              <!-- ✏️  각 슬라이드의 제목과 이미지를 교체하세요 -->
+              <!-- ✏️ 각 슬라이드 제목·이미지·설명을 교체하세요 -->
               <div class="home-slide">
                 <h2>Chapter 1</h2>
-                <!-- 이미지가 있다면 아래 주석을 풀고 src를 입력하세요 -->
-                <!-- <img src="이미지_URL" alt="Chapter 1"> -->
-                <p style="color:#666; margin-top:20px;">챕터 1 소개 문구를 여기에 입력하세요.</p>
+                <!-- <img src="IMAGE_URL" alt="Chapter 1"> -->
+                <p style="color:#666; margin-top:20px;">Chapter 1 introduction text goes here.</p>
               </div>
 
               <div class="home-slide">
                 <h2>Chapter 2</h2>
-                <p style="color:#666; margin-top:20px;">챕터 2 소개 문구를 여기에 입력하세요.</p>
+                <p style="color:#666; margin-top:20px;">Chapter 2 introduction text goes here.</p>
               </div>
 
               <div class="home-slide">
                 <h2>Chapter 3</h2>
-                <p style="color:#666; margin-top:20px;">챕터 3 소개 문구를 여기에 입력하세요.</p>
+                <p style="color:#666; margin-top:20px;">Chapter 3 introduction text goes here.</p>
               </div>
 
               <div class="home-slide">
                 <h2>Chapter 4</h2>
-                <p style="color:#666; margin-top:20px;">챕터 4 소개 문구를 여기에 입력하세요.</p>
+                <p style="color:#666; margin-top:20px;">Chapter 4 introduction text goes here.</p>
               </div>
 
             </div><!-- /home-slider-track -->
@@ -193,15 +227,16 @@
       </section><!-- /home -->
 
 
-      <!-- 캐릭터 페이지들이 JS로 자동 생성됩니다 -->
+      <!-- 캐릭터 페이지는 Character.js의 initCharacterPages()가 자동 생성 -->
       <div id="character-pages-container"></div>
 
 
-      <!-- ══════════════════════════════════════════════
-           Records (기록 / 세션 로그) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Records 섹션 — 챕터별 세션 로그
+      ════════════════════════════════════════ -->
       <section id="Backup" class="content-card">
 
+        <!-- changePhase(버튼, 인덱스) — UI.js에 정의 -->
         <div class="phase-tabs">
           <button class="phase-btn active" onclick="changePhase(this,0)">Chapter 1</button>
           <button class="phase-btn" onclick="changePhase(this,1)">Chapter 2</button>
@@ -211,52 +246,53 @@
 
         <div class="phase-content-wrapper">
 
-          <!-- Chapter 1 기록 -->
+          <!-- Chapter 1 세션 로그
+               [main] 캐릭터이름 : 대사 형식으로 입력 →
+               UI.js의 parseAllLogs()가 색상 강조 처리      -->
           <div class="phase-slide active">
             <h2>Session Records — Chapter 1</h2>
-            <!-- ✏️  details 태그를 복사해서 세션 기록을 추가하세요 -->
+            <!-- ✏️ 아래 details 블록을 복사해서 세션을 추가하세요 -->
             <details>
-              <summary>Session 1 — 제목을 입력하세요</summary>
+              <summary>Session 1 — Enter title here</summary>
               <div class="details-content">
-                <!-- [main] 캐릭터이름 : 대사 형식으로 입력하면 자동으로 색상이 지정됩니다 -->
-                [main] 가나다 : 세션 대사 예시입니다.<br>
-                [main] GM : 상황 설명을 여기에 입력합니다.
+                [main] 가나 : Sample dialogue line.<br>
+                [main] GM : Situation description here.
               </div>
             </details>
             <details>
-              <summary>Session 2 — 제목을 입력하세요</summary>
+              <summary>Session 2 — Enter title here</summary>
               <div class="details-content">
-                [main] 다라마 : 두 번째 세션 예시입니다.
+                [main] 나다 : Second session sample.
               </div>
             </details>
           </div>
 
           <div class="phase-slide">
             <h2>Session Records — Chapter 2</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 기록이 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No records yet.</p>
           </div>
 
           <div class="phase-slide">
             <h2>Session Records — Chapter 3</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 기록이 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No records yet.</p>
           </div>
 
           <div class="phase-slide">
             <h2>Session Records — Chapter 4</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 기록이 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No records yet.</p>
           </div>
 
         </div>
       </section><!-- /Backup -->
 
 
-      <!-- ══════════════════════════════════════════════
-           Gallery (화첩 / 팬아트) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Gallery 섹션 — 이미지 게시판
+           uploadGalleryPost() / loadGalleryData() — Features.js
+      ════════════════════════════════════════ -->
       <section id="Gallery" class="content-card">
         <h2 style="text-align:center; border:none; margin-bottom:10px;">Gallery</h2>
 
-        <!-- 챕터별 탭 -->
         <div class="phase-tabs">
           <button class="phase-btn active" onclick="changePhase(this,0); loadGalleryData(1);">Chapter 1</button>
           <button class="phase-btn" onclick="changePhase(this,1); loadGalleryData(1);">Chapter 2</button>
@@ -273,7 +309,7 @@
                 id="gal-content"
                 class="modal-inline-textarea"
                 style="height:80px; margin-bottom:10px;"
-                placeholder="내용을 입력하세요..."
+                placeholder="Write a description..."
               ></textarea>
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="file" id="gal-file" accept="image/*" style="color:#666; font-size:0.85rem; flex-grow:1;">
@@ -283,7 +319,7 @@
           </div>
         </div>
 
-        <!-- 게시글 목록 (JS로 자동 렌더링) -->
+        <!-- 게시글 목록 (Features.js의 loadGalleryData()가 동적 렌더링) -->
         <div id="gallery-list-container">
           <p style="text-align:center; color:#555;">Loading...</p>
         </div>
@@ -291,9 +327,9 @@
       </section><!-- /Gallery -->
 
 
-      <!-- ══════════════════════════════════════════════
-           Characters (인물 / NPC) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Characters 섹션 — NPC 인물 카드
+      ════════════════════════════════════════ -->
       <section id="NPC" class="content-card">
 
         <div class="phase-tabs">
@@ -307,56 +343,58 @@
 
           <div class="phase-slide active">
             <h2>NPCs — Chapter 1</h2>
-            <!-- ✏️  아래 relation-card를 복사해서 NPC를 추가하세요 -->
+            <!-- ✏️ relation-card를 복사해서 NPC를 추가하세요
+                 data-relation 값으로 뱃지 색상이 결정됩니다 -->
             <div class="relation-grid">
-              <div class="relation-card" data-relation="중립">
+              <div class="relation-card" data-relation="neutral">
                 <img
                   src="https://placehold.co/80x80/111111/666666?text=NPC"
                   class="relation-avatar"
                   onclick="openLightbox(this.src)"
                 >
-                <div class="relation-name">NPC 이름</div>
-                <div class="relation-desc">NPC 설명을 여기에 입력하세요.</div>
+                <div class="relation-name">NPC Name</div>
+                <div class="relation-desc">NPC description goes here.</div>
               </div>
 
-              <div class="relation-card" data-relation="적">
+              <div class="relation-card" data-relation="hostile">
                 <img
                   src="https://placehold.co/80x80/111111/666666?text=NPC"
                   class="relation-avatar"
                   onclick="openLightbox(this.src)"
                 >
-                <div class="relation-name">적대 NPC</div>
-                <div class="relation-desc">적대적인 NPC 설명입니다.</div>
+                <div class="relation-name">Hostile NPC</div>
+                <div class="relation-desc">Description of a hostile NPC.</div>
               </div>
             </div>
           </div>
 
           <div class="phase-slide">
             <h2>NPCs — Chapter 2</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 등록된 NPC가 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
           </div>
 
           <div class="phase-slide">
             <h2>NPCs — Chapter 3</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 등록된 NPC가 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
           </div>
 
           <div class="phase-slide">
             <h2>NPCs — Chapter 4</h2>
-            <p style="color:#555; text-align:center; padding:40px 0;">아직 등록된 NPC가 없습니다.</p>
+            <p style="color:#555; text-align:center; padding:40px 0;">No NPCs registered yet.</p>
           </div>
 
         </div>
       </section><!-- /NPC -->
 
 
-      <!-- ══════════════════════════════════════════════
-           Relations (관계도) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Relations 섹션 — SVG 관계도
+           Map.js가 노드·엣지 렌더링 처리
+      ════════════════════════════════════════ -->
       <section id="relations" class="content-card">
         <h2 style="text-align:center; border:none; margin-bottom:10px;">Relationship Map</h2>
 
-        <!-- 챕터 탭 -->
+        <!-- changeMapPhase() — Map.js에 정의 -->
         <div class="phase-tabs" id="map-phase-tabs">
           <button class="phase-btn active" onclick="changeMapPhase(0)">Chapter 1</button>
           <button class="phase-btn" onclick="changeMapPhase(1)">Chapter 2</button>
@@ -364,7 +402,7 @@
           <button class="phase-btn" onclick="changeMapPhase(3)">Chapter 4</button>
         </div>
 
-        <!-- 관계도 툴바 -->
+        <!-- 관계도 툴바 (편집 모드 진입·저장) -->
         <div class="map-toolbar" style="display:flex; justify-content:space-between; align-items:center;
                                         background:rgba(255,255,255,0.02); padding:15px; border-radius:8px;
                                         margin-bottom:25px; border:1px solid rgba(255,255,255,0.06);">
@@ -376,13 +414,17 @@
           <button id="btn-save-map" class="eternal-btn" style="padding:8px 20px; font-size:0.9rem;" onclick="saveMapToDB()">Save</button>
         </div>
 
-        <!-- 관계도 캔버스 -->
+        <!-- 관계도 캔버스 레이어 구조
+             faction-groups-layer — 진영 배경 색상 영역
+             map-svg-layer        — 관계선(엣지) SVG
+             static-nodes-layer   — 인물 노드 DOM
+             floating-edge-editor — 편집 모드 선 설정 패널  -->
         <div class="static-map-container" id="static-map-container">
           <div id="faction-groups-layer"  style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></div>
           <svg class="map-svg-layer" id="map-svg-layer" style="z-index:1;"></svg>
           <div id="static-nodes-layer" style="z-index:10;"></div>
 
-          <!-- 관계선 편집 패널 (편집 모드에서만 표시) -->
+          <!-- 관계선 편집 패널 (편집 모드에서만 노출) -->
           <div id="floating-edge-editor"
                style="display:none; position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
                       background:rgba(15,15,15,0.95); border:1px solid rgba(255,255,255,0.1);
@@ -394,12 +436,12 @@
             </div>
             <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
               <select id="edge-from"  class="auth-input" style="padding:5px; margin:0; width:100px;" onchange="previewEdge()"></select>
-              <span>→</span>
+              <span>&#8594;</span>
               <select id="edge-to"    class="auth-input" style="padding:5px; margin:0; width:100px;" onchange="previewEdge()"></select>
-              <input  type="text" id="edge-label" class="auth-input" style="padding:5px; margin:0; width:120px;" placeholder="관계명" oninput="previewEdge()">
+              <input  type="text" id="edge-label" class="auth-input" style="padding:5px; margin:0; width:120px;" placeholder="Relation label" oninput="previewEdge()">
               <select id="edge-dash"  class="auth-input" style="padding:5px; margin:0; width:80px;"  onchange="previewEdge()">
-                <option value="false">실선</option>
-                <option value="true">점선</option>
+                <option value="false">Solid</option>
+                <option value="true">Dashed</option>
               </select>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -421,13 +463,14 @@
       </section><!-- /relations -->
 
 
-      <!-- ══════════════════════════════════════════════
-           Shop (상점) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Shop 섹션 — 아이템 상점
+           renderShop() / changeShopTab() — Features.js
+      ════════════════════════════════════════ -->
       <section id="Shop" class="content-card">
         <h2 style="text-align:center; border:none; margin-bottom:10px;">Shop</h2>
 
-        <!-- 현재 소지금 표시 -->
+        <!-- 현재 소지금 표시 (updateShopMoneyDisplay() — Features.js) -->
         <div style="text-align:right; margin-bottom:15px; background:rgba(255,255,255,0.03);
                     padding:10px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
                     display:inline-block; float:right;">
@@ -442,19 +485,20 @@
           <button class="phase-btn" onclick="changeShopTab('furniture')">Furniture</button>
         </div>
 
-        <!-- 상품 목록 (JS로 자동 렌더링) -->
+        <!-- 상품 목록 (Features.js의 renderShop()이 동적 렌더링) -->
         <div class="shop-grid" id="shop-items-container"></div>
 
       </section><!-- /Shop -->
 
 
-      <!-- ══════════════════════════════════════════════
-           Games (미니게임) 섹션
-      ══════════════════════════════════════════════ -->
+      <!-- ════════════════════════════════════════
+           Games 섹션 — 미니게임
+           playCoinToss / startShellGame / startHuntingGame / prepareFishing — Features.js
+      ════════════════════════════════════════ -->
       <section id="MiniGames" class="content-card">
         <h2 style="text-align:center; border:none; margin-bottom:10px;">Games</h2>
 
-        <!-- 현재 소지금 표시 -->
+        <!-- 소지금 표시 -->
         <div style="text-align:right; margin-bottom:15px; background:rgba(255,255,255,0.03);
                     padding:10px 20px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
                     display:inline-block; float:right;">
@@ -463,19 +507,20 @@
         </div>
         <div style="clear:both;"></div>
 
-        <!-- 게임 종류 탭 -->
+        <!-- 게임 탭 (changeMiniGame — UI.js) -->
         <div class="phase-tabs" id="minigame-tabs">
           <button class="phase-btn active" onclick="changeMiniGame(this,0)">Coin Flip</button>
           <button class="phase-btn" onclick="changeMiniGame(this,1)">Shell Game</button>
           <button class="phase-btn" onclick="changeMiniGame(this,2)">Hunting</button>
+          <button class="phase-btn" onclick="changeMiniGame(this,3)">Fishing</button>
         </div>
 
         <div class="minigame-content">
 
-          <!-- 동전 던지기 -->
+          <!-- ── Coin Flip ── -->
           <div class="mg-slide active" style="text-align:center;">
             <h3 style="color:#aaa; margin-bottom:15px; letter-spacing:1px;">Coin Flip</h3>
-            <p style="color:#555; margin-bottom:30px;">배팅 금액을 입력하고 앞/뒤를 선택하세요. 확률은 50%입니다.</p>
+            <p style="color:#555; margin-bottom:30px;">Enter a bet amount and choose heads or tails. 50% chance.</p>
             <input
               type="number"
               id="cointoss-bet"
@@ -488,7 +533,7 @@
               <div id="coin-element" class="coin">?</div>
             </div>
             <div id="cointoss-result" style="height:24px; font-size:1.1rem; font-weight:bold; margin-bottom:25px; color:#aaa;">
-              앞면? 뒷면?
+              Heads or Tails?
             </div>
             <div style="display:flex; gap:15px; justify-content:center;">
               <button id="btn-guess-heads" class="auth-btn" style="width:150px;" onclick="playCoinToss('heads')">Heads</button>
@@ -496,10 +541,10 @@
             </div>
           </div><!-- /Coin Flip -->
 
-          <!-- 야바위 -->
+          <!-- ── Shell Game ── -->
           <div class="mg-slide" style="text-align:center;">
             <h3 style="color:#aaa; margin-bottom:15px; letter-spacing:1px;">Shell Game</h3>
-            <p style="color:#555; margin-bottom:30px;">공이 숨겨진 컵을 맞추면 3배를 드립니다!</p>
+            <p style="color:#555; margin-bottom:30px;">Guess the cup hiding the ball to win 3x!</p>
             <input
               type="number"
               id="shell-bet"
@@ -515,14 +560,14 @@
               <div class="shell-wrapper" id="cup-wrap-2" style="transform:translateX(240px); z-index:1;"><div class="shell-cup" id="cup-2" onclick="guessShellCup(2)"><div class="shell-ball" id="shell-ball-2"></div></div></div>
             </div>
             <div id="shell-result" style="height:24px; font-size:1.1rem; font-weight:bold; margin-top:25px; color:#aaa;">
-              배팅 후 시작하세요!
+              Place your bet and start!
             </div>
           </div><!-- /Shell Game -->
 
-          <!-- 사냥터 -->
+          <!-- ── Hunting ── -->
           <div class="mg-slide" style="text-align:center;">
             <h3 style="color:#aaa; margin-bottom:15px; letter-spacing:1px;">Hunting</h3>
-            <p style="color:#555; margin-bottom:15px;">15초 동안 나타나는 사냥감을 클릭하세요. (사슴: 10G / 곰: 50G)</p>
+            <p style="color:#555; margin-bottom:15px;">Click targets within 15 seconds. (Deer: 10G / Bear: 50G)</p>
             <button id="btn-start-hunt" class="auth-btn" style="width:200px; margin-bottom:20px;" onclick="startHuntingGame()">Start Hunting</button>
             <div class="hunt-ui">
               <div style="color:#666;">Time: <span id="hunt-timer" style="color:#aaa; font-weight:bold;">15</span>s</div>
@@ -531,40 +576,514 @@
             <div class="hunt-area" id="hunt-area"></div>
           </div><!-- /Hunting -->
 
+          <!-- ── Fishing ── (영원록 v2에서 추가된 미니게임)
+               prepareFishing / pressFishingBtn / releaseFishingBtn — Features.js -->
+          <div class="mg-slide" id="slide-fishing">
+            <style>
+              /* 낚시 미니게임 전용 스타일 — 다른 섹션에 영향 없음 */
+              #fishing-minigame { text-align:center; background-color:#1e1e1e; border:2px solid #4A90E2; border-radius:10px; padding:20px; max-width:350px; margin:20px auto; user-select:none; color:#fff; position:relative; }
+              #fishing-menu { display:flex; flex-direction:column; gap:10px; margin-top:15px; }
+              .spot-btn { background-size:cover; background-position:center; color:white; border:2px solid #fff; border-radius:8px; padding:20px 10px; font-size:18px; font-weight:bold; cursor:pointer; text-shadow:2px 2px 4px rgba(0,0,0,0.8); transition:transform 0.2s; }
+              .spot-btn:hover { transform:scale(1.02); }
+              /* ✏️ 낚시터 배경 이미지를 교체하세요 */
+              #btn-spot-easy { background-color:#4da6ff; }
+              #btn-spot-hard { background-color:#1a0033; }
+              #fishing-play { display:none; }
+              .progress-container { width:100%; height:25px; background-color:#333; border-radius:12px; overflow:hidden; margin-bottom:20px; border:2px solid #555; }
+              #progress-bar { width:20%; height:100%; background-color:#FF9800; transition:width 0.1s linear; }
+              .water-area { width:80px; height:300px; background-color:#2c3e50; border:3px solid #555; border-radius:8px; margin:0 auto 20px auto; position:relative; overflow:hidden; }
+              #fish-zone { width:100%; height:35px; position:absolute; bottom:120px; z-index:10; background:#4caf50; border-radius:4px; opacity:0.7; }
+              #player-bar { width:100%; background-color:rgba(76,175,80,0.3); border:3px solid #4CAF50; position:absolute; bottom:0; z-index:5; border-radius:8px; transition:border-color 0.2s, background-color 0.2s; }
+              .catch-success { background-color:rgba(100,255,100,0.4)!important; border-color:#4CAF50!important; }
+              .catch-fail    { background-color:rgba(255,100,100,0.2)!important; border-color:#F44336!important; }
+              #fishing-action-btn { background-color:#4A90E2; color:white; border:none; padding:15px 30px; border-radius:8px; font-size:18px; font-weight:bold; cursor:pointer; touch-action:manipulation; width:100%; }
+              #fishing-action-btn:disabled { background-color:#555; cursor:not-allowed; }
+            </style>
+            <div id="fishing-minigame">
+              <h3>Fishing</h3>
+              <p id="fishing-message">Select a fishing spot.</p>
+              <div id="fishing-menu">
+                <button id="btn-spot-easy" class="spot-btn" onclick="prepareFishing('easy')">
+                  Calm Lake<br><span style="font-size:0.8em; font-weight:normal;">(Easy / Low reward)</span>
+                </button>
+                <button id="btn-spot-hard" class="spot-btn" onclick="prepareFishing('hard')">
+                  Rough Sea<br><span style="font-size:0.8em; font-weight:normal;">(Hard / High reward)</span>
+                </button>
+              </div>
+              <div id="fishing-play">
+                <div class="progress-container"><div id="progress-bar"></div></div>
+                <div class="water-area" id="fishing-water-area">
+                  <div id="fish-zone"></div>
+                  <div id="player-bar"></div>
+                </div>
+                <button id="fishing-action-btn"
+                  onmousedown="pressFishingBtn(event)" ontouchstart="pressFishingBtn(event)"
+                  onmouseup="releaseFishingBtn(event)" ontouchend="releaseFishingBtn(event)"
+                  onmouseleave="releaseFishingBtn(event)">Hold</button>
+              </div>
+            </div>
+          </div><!-- /Fishing -->
+
         </div><!-- /minigame-content -->
       </section><!-- /MiniGames -->
+
+
+      <!-- ════════════════════════════════════════
+           Arena(대련장) 섹션 — 개인전 / 단체전 / 사흉수 토벌
+           Combat.js의 CombatSys 객체가 전투 로직 처리
+      ════════════════════════════════════════ -->
+      <section id="Sparring" class="content-card">
+
+        <!-- 대련장 전용 인라인 스타일
+             combat_arena.css 에 넣을 수 없는 동적 요소 스타일 포함 -->
+        <style>
+          .sparring-modern-header { text-align:center; margin-bottom:30px; }
+          .sparring-modern-title  { font-size:1.8rem; font-family:'Nanum Myeongjo',serif; color:var(--accent-color); letter-spacing:4px; margin:0 0 10px; }
+          .sparring-modern-subtitle { font-size:0.95rem; color:#888; letter-spacing:1px; margin:0; }
+          .challenge-box-modern  { background:rgba(15,15,15,0.8); border:1px solid rgba(215,179,61,0.2); padding:30px; border-radius:12px; margin-bottom:40px; }
+          .challenge-box-title   { color:#fff; font-size:1.1rem; letter-spacing:2px; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; }
+          .combat-select-large   { width:100%; padding:15px; font-size:1rem; background:#111; border:1px solid #444; color:#eee; border-radius:8px; transition:border-color 0.3s; }
+          .combat-select-large:focus { border-color:var(--accent-color); outline:none; }
+          .btn-challenge-large   { width:100%; padding:16px; font-size:1.1rem; font-weight:bold; letter-spacing:3px; background:linear-gradient(135deg,#d7b33d,#b8952d); color:#111; border:none; border-radius:8px; cursor:pointer; transition:transform 0.2s; margin-top:10px; }
+          .btn-challenge-large:hover { transform:translateY(-2px); }
+          .lobby-lists-modern    { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+          .lobby-list-col        { background:transparent; }
+          .lobby-list-label-modern { font-size:1rem; color:#aaa; letter-spacing:2px; margin-bottom:15px; display:flex; align-items:center; gap:10px; }
+          .lobby-list-label-modern::before { content:''; display:block; width:4px; height:16px; background:var(--accent-color); }
+          .modern-card           { background:#1a1a1a; border:1px solid #333; padding:20px; border-radius:8px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center; transition:background 0.3s; }
+          .modern-card:hover     { background:#222; border-color:#555; }
+          .modern-badge          { font-size:0.75rem; font-weight:600; letter-spacing:1px; padding:3px 8px; border-radius:4px; width:fit-content; }
+          .badge-incoming        { background:rgba(76,175,80,0.1); color:#4caf50; border:1px solid rgba(76,175,80,0.3); }
+          .badge-waiting         { background:rgba(136,136,136,0.1); color:#aaa; border:1px solid rgba(136,136,136,0.3); }
+          .badge-live            { background:rgba(255,77,77,0.1); color:#ff4d4d; border:1px solid rgba(255,77,77,0.3); }
+          .modern-card-title     { font-size:1.1rem; font-weight:bold; color:#fff; }
+          .modern-card-desc      { font-size:0.85rem; color:#777; }
+          .modern-action-btn     { padding:10px 20px; font-size:0.9rem; font-weight:bold; letter-spacing:1px; border-radius:6px; cursor:pointer; border:none; transition:0.2s; }
+          .btn-solid-accept      { background:#4caf50; color:#fff; }
+          .btn-solid-cancel      { background:#333; color:#aaa; border:1px solid #555; }
+          .btn-solid-spectate    { background:transparent; color:var(--accent-color); border:1px solid var(--accent-color); }
+          .modern-action-btn:hover { opacity:0.8; }
+          .modern-empty-card     { text-align:center; padding:40px 20px; background:rgba(0,0,0,0.2); border:1px dashed #444; border-radius:8px; color:#666; letter-spacing:1px; }
+        </style>
+
+        <!-- 모드 전환 탭: Solo / Team / Raid
+             Raid 탭 클릭 시 _loadOpenRaidRoom()으로 열린 방 조회 -->
+        <div class="phase-tabs" style="margin-bottom:30px;" id="sparring-main-tabs">
+          <button class="phase-btn combat-mode-btn active" data-mode="solo"
+            onclick="CombatSys.switchMode('solo'); document.getElementById('lobby-raid').style.display='none';"
+            style="font-size:1.1rem; padding:12px;">Solo</button>
+          <button class="phase-btn combat-mode-btn" data-mode="team"
+            onclick="CombatSys.switchMode('team'); document.getElementById('lobby-raid').style.display='none';"
+            style="font-size:1.1rem; padding:12px;">Team</button>
+          <button class="phase-btn combat-mode-btn" data-mode="raid"
+            onclick="
+              document.getElementById('lobby-solo').style.display='none';
+              document.getElementById('lobby-team').style.display='none';
+              document.getElementById('lobby-raid').style.display='block';
+              document.querySelectorAll('#sparring-main-tabs .combat-mode-btn').forEach(b=>b.classList.remove('active'));
+              this.classList.add('active');
+              if(typeof window._loadOpenRaidRoom==='function') window._loadOpenRaidRoom();
+            "
+            style="font-size:1.1rem; padding:12px; color:#ff4d4d;">Raid</button>
+        </div>
+
+        <!-- ── Solo (개인전) ── -->
+        <div id="lobby-solo">
+          <div class="sparring-modern-header">
+            <h3 class="sparring-modern-title">Solo Match</h3>
+            <p class="sparring-modern-subtitle">Select an opponent and begin the duel.</p>
+          </div>
+          <div class="challenge-box-modern">
+            <div class="challenge-box-title">New Challenge</div>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+              <!-- 상대 선택 드롭다운 (CombatSys.initDropdowns()이 동적 populate) -->
+              <select id="spar-target" class="combat-select-large">
+                <option value="">Select an opponent</option>
+              </select>
+              <div style="display:flex; gap:15px;">
+                <!-- 각자의 능력치 챕터를 독립적으로 선택 -->
+                <select id="spar-my-phase" class="combat-select-large" style="flex:1;">
+                  <option value="">My Stats: Default</option>
+                  <option value="0">Chapter 1 Stats</option>
+                  <option value="1">Chapter 2 Stats</option>
+                  <option value="2">Chapter 3 Stats</option>
+                  <option value="3">Chapter 4 Stats</option>
+                </select>
+                <select id="spar-target-phase" class="combat-select-large" style="flex:1;">
+                  <option value="">Opponent Stats: Default</option>
+                  <option value="0">Chapter 1 Stats</option>
+                  <option value="1">Chapter 2 Stats</option>
+                  <option value="2">Chapter 3 Stats</option>
+                  <option value="3">Chapter 4 Stats</option>
+                </select>
+              </div>
+              <!-- prepareAndChallenge() — 하단 인라인 스크립트에 정의 -->
+              <button class="btn-challenge-large" onclick="prepareAndChallenge()">Challenge</button>
+            </div>
+          </div>
+          <div class="lobby-lists-modern">
+            <div class="lobby-list-col">
+              <div class="lobby-list-label-modern">Incoming Requests</div>
+              <div id="spar-incoming-requests"></div>
+            </div>
+            <div class="lobby-list-col">
+              <div class="lobby-list-label-modern">Active Duels</div>
+              <div id="spar-ongoing-list"></div>
+            </div>
+          </div>
+        </div><!-- /lobby-solo -->
+
+        <!-- ── Team (단체전) ── -->
+        <div id="lobby-team" style="display:none;">
+          <div class="sparring-modern-header">
+            <h3 class="sparring-modern-title">Team Battle</h3>
+            <p class="sparring-modern-subtitle">Turn order determined by initiative (Drive stat).</p>
+          </div>
+          <!-- CombatSys.switchMode('team')이 이 영역에 UI를 동적 렌더링 -->
+          <div id="team-lobby-area"></div>
+        </div><!-- /lobby-team -->
+
+        <!-- ── Raid (사흉수 토벌) ──
+             방 개설 → DB raid_rooms 테이블에 insert
+             참여자들이 join → party 배열 업데이트
+             인원 충족 or 수동 시작 → status='active'
+             Realtime 구독으로 모든 참여자가 동시에 전투 입장  -->
+        <div id="lobby-raid" style="display:none;">
+          <div class="sparring-modern-header">
+            <h3 class="sparring-modern-title" style="color:#ff4d4d;">Boss Raid</h3>
+            <p class="sparring-modern-subtitle">Open a room and battle begins when the party is assembled.</p>
+          </div>
+
+          <!-- 방 개설 폼 -->
+          <div class="challenge-box-modern" style="border-color:rgba(255,77,77,0.3);">
+            <div class="challenge-box-title" style="color:#ff6b6b;">
+              Open Raid Room
+              <span style="color:#666; font-size:0.75rem; font-weight:normal; margin-left:6px;">(Any logged-in user)</span>
+            </div>
+            <!-- ✏️ 보스 옵션은 Raid.js의 RAID_BOSSES 데이터와 맞추세요 -->
+            <select id="raid-boss-select" class="combat-select-large" style="border-color:#5a2020; margin-bottom:12px;">
+              <option value="">Select a boss</option>
+              <option value="ganada">가나다(假那多) — Chaos type / Magic valid</option>
+              <option value="nadara">나다라(那多羅) — Dodge required / Drain</option>
+              <option value="darama">다라마(多羅馬) — Luck roll combat</option>
+              <option value="ramaba">라마바(羅馬巴) — AoE / No dodge</option>
+            </select>
+            <div style="margin-bottom:12px;">
+              <label style="color:#aaa; font-size:0.85rem; display:block; margin-bottom:6px;">Max Party Size</label>
+              <select id="raid-max-party" class="combat-select-large" style="border-color:#5a2020;">
+                <option value="1">1 Player</option>
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4" selected>4 Players (Max)</option>
+              </select>
+            </div>
+            <button class="btn-challenge-large"
+              style="background:linear-gradient(135deg,#8b1a1a,#5a0000); color:#ffb3b3; border:none;"
+              onclick="startRaidBtnClick()">
+              Open Raid Room
+            </button>
+          </div>
+
+          <!-- 로비 상태 표시 (JS가 동적으로 채움) -->
+          <div id="raid-lobby-content" style="margin-top:16px;">
+            <div style="text-align:center; color:#555; font-size:0.9rem; padding:30px 0;">
+              No rooms open.<br>
+              <span style="font-size:0.8rem; color:#444;">Open a room above, or wait for the host.</span>
+            </div>
+          </div>
+        </div><!-- /lobby-raid -->
+
+      </section><!-- /Sparring -->
+
+
+      <!-- ════════════════════════════════════════
+           Room(숙소) 섹션 — 등각투영 마이룸
+           MyRoomSys (Myroom.js) 가 SVG 캔버스 렌더링
+      ════════════════════════════════════════ -->
+      <section id="MyRoom" class="content-card">
+        <h2 style="text-align:center; border:none; margin-bottom:10px;">My Room</h2>
+
+        <!-- 내 방 / 이웃 방문 탭 -->
+        <div class="phase-tabs" id="myroom-tabs">
+          <button class="phase-btn active"
+            onclick="if(typeof MyRoomSys!=='undefined') MyRoomSys.loadMyRoom()">My Room</button>
+          <button class="phase-btn"
+            onclick="if(typeof MyRoomSys!=='undefined') MyRoomSys.loadVisitList()">Visit Neighbors</button>
+        </div>
+
+        <!-- 이웃 목록 (loadVisitList()가 동적으로 채움) -->
+        <div id="room-visit-list" style="display:none;">
+          <p style="text-align:center; color:#aaa; margin-bottom:20px;">Browse other characters' rooms.</p>
+          <div id="room-neighbors" class="relation-grid"></div>
+        </div>
+
+        <!-- 방 캔버스 영역 -->
+        <div id="room-canvas-area">
+          <!-- 방 조작 버튼 행 -->
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <h3 id="room-owner-name" style="color:#aaa; margin:0;">Someone's Room</h3>
+            <!-- 이웃 방 방문 시: 목록으로 돌아가기 -->
+            <button id="btn-room-back" class="auth-btn"
+              style="width:auto; padding:5px 15px; margin:0; background:#555; display:none;"
+              onclick="if(typeof MyRoomSys!=='undefined') MyRoomSys.loadVisitList()">Back</button>
+            <!-- 내 방에서만 표시: 편집 모드 진입 -->
+            <button id="btn-room-edit" class="auth-btn"
+              style="width:auto; padding:5px 15px; margin:0; display:none;"
+              onclick="if(typeof MyRoomSys!=='undefined') MyRoomSys.toggleEditMode()">Edit</button>
+            <!-- 편집 모드에서만 표시: 저장 -->
+            <button id="btn-room-save" class="auth-btn"
+              style="width:auto; padding:5px 15px; margin:0; display:none; background:#4caf50;"
+              onclick="if(typeof MyRoomSys!=='undefined') MyRoomSys.saveRoom()">Save</button>
+          </div>
+
+          <!-- 캔버스 + 인벤토리 사이드 패널 -->
+          <div style="position:relative; display:flex; gap:15px;">
+
+            <!-- SVG 등각투영 캔버스 (MyRoomSys._buildCanvas()가 삽입) -->
+            <div id="room-canvas"
+                 style="flex:1; height:500px; border:1px solid #333; position:relative;
+                        overflow:hidden; border-radius:8px; background:#1a1814;">
+            </div>
+
+            <!-- 가구 인벤토리 패널 (편집 모드에서만 노출)
+                 MyRoomSys._loadInventory()가 아이템 렌더링               -->
+            <div id="room-inventory"
+                 style="display:none; width:250px; background:rgba(20,20,20,0.9);
+                        border:1px dashed #555; border-radius:8px; padding:15px;
+                        overflow-y:auto; height:500px;">
+              <h4 style="color:#fff; margin-top:0; border-bottom:1px solid #444; padding-bottom:10px;">
+                Furniture Inventory
+              </h4>
+              <!-- 좌클릭: 배치 / 우클릭: 취소 / 휠: 레이어 조정 -->
+              <p style="color:#555; font-size:0.78rem; margin-bottom:10px; line-height:1.5;">
+                Left click: place &nbsp;|&nbsp; Right click: remove &nbsp;|&nbsp; Scroll: layer
+              </p>
+              <div id="room-inventory-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+            </div>
+
+          </div>
+        </div><!-- /room-canvas-area -->
+
+      </section><!-- /MyRoom -->
 
 
     </main><!-- /main-content -->
   </div><!-- /content-row -->
 
   <footer class="site-footer">
-    <!-- ✏️  저작권 문구를 수정하세요 -->
-    © 2025 캠페인 이름. All rights reserved.
+    <!-- ✏️ 저작권 문구를 수정하세요 -->
+    &copy; 2025 Campaign Name. All rights reserved.
   </footer>
 
 </div><!-- /container -->
 
 
 <!-- ══════════════════════════════════════════════
-     BGM 위젯 (캐릭터 탭 전환 시 자동으로 나타납니다)
+     BGM 위젯 (캐릭터 탭 진입 시 자동 표시)
+     setupCharacterBGM() — 하단 인라인 스크립트에 정의
 ══════════════════════════════════════════════ -->
-<div id="bgm-widget" style="position:fixed; bottom:100px; right:20px; z-index:9999; display:none;">
-  <button id="btn-toggle-bgm" onclick="toggleCharacterBGM()"
-          style="background:rgba(20,20,20,0.9); color:#aaa; border:1px solid #444; padding:10px 20px;
-                 border-radius:20px; font-family:inherit; font-size:14px; cursor:pointer;">
-    ♪ Play BGM
-  </button>
+<style>
+  #bgm-widget { position:fixed; bottom:100px; right:20px; z-index:9999; display:none; }
+  #btn-toggle-bgm { background:rgba(20,20,20,0.9); color:#aaa; border:1px solid #555;
+                    padding:10px 20px; border-radius:20px; font-family:inherit; font-size:14px; cursor:pointer; }
+  #btn-toggle-bgm.playing { background:#555; animation:bgmPulse 2s infinite; }
+  @keyframes bgmPulse { 0%,100%{box-shadow:0 0 0 0 rgba(200,200,200,0.3);} 70%{box-shadow:0 0 0 10px rgba(200,200,200,0);} }
+</style>
+<div id="bgm-widget">
+  <button id="btn-toggle-bgm" onclick="toggleCharacterBGM()">Play BGM</button>
   <div id="bgm-player-container" style="position:absolute; width:0; height:0; overflow:hidden; opacity:0;"></div>
 </div>
 
 
 <!-- ══════════════════════════════════════════════
-     이미지 라이트박스 (클릭한 이미지를 크게 표시)
+     대련 전투 모달 (1:1 / 단체전)
+     Combat.js의 CombatSys가 이 모달을 제어
+══════════════════════════════════════════════ -->
+<div id="sparring-arena" class="combat-fullscreen-modal" style="display:none;">
+  <div class="combat-modal-content">
+    <div class="combat-header">
+      <h2 style="color:var(--accent-color); margin:0;">Duel in Progress</h2>
+      <button class="auth-btn btn-flee" onclick="CombatSys.exitArena()">Retreat</button>
+    </div>
+
+    <!-- 관전자 표시 -->
+    <div class="arena-spectators-box">
+      <div class="spectator-label">Live Spectators (<span id="spectator-count">0</span>)</div>
+      <div id="spectator-list" class="spectator-tags"></div>
+    </div>
+
+    <!-- 단체전 무대 (팀 vs 팀) -->
+    <div id="team-arena-stage" class="team-arena-stage" style="display:none;">
+      <div id="team-side-a" class="team-side"></div>
+      <div class="team-vs-divider"><span>VS</span><div style="width:1px; height:60px; background:rgba(215,179,61,0.3);"></div></div>
+      <div id="team-side-b" class="team-side"></div>
+    </div>
+
+    <!-- 개인전 무대 (P1 vs P2) -->
+    <div id="solo-arena-stage" class="combat-middle-stage">
+
+      <!-- P1 베팅 패널 -->
+      <div class="betting-panel p1-bet-panel">
+        <div class="bet-title">Bet on P1</div>
+        <div class="bet-action">
+          <div class="my-money">Balance: <strong id="bet-my-money-p1" style="color:var(--accent-color);">-</strong></div>
+          <div style="display:flex; gap:5px; margin-bottom:10px;">
+            <input type="number" id="bet-amt-p1" class="auth-input bet-input" placeholder="G" min="1">
+            <button class="auth-btn btn-bet" onclick="CombatSys.bet('p1')">Bet</button>
+          </div>
+        </div>
+        <div class="bettor-list-title">Current Bets</div>
+        <div id="p1-bettors" class="bettor-list"></div>
+      </div>
+
+      <!-- P1 캐릭터 카드 -->
+      <div class="combat-char p1-side">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div class="combatant-card" data-id="p1" style="width:160px;">
+            <img id="cb-p1-img" src="https://placehold.co/160x160/1a1817/d7b33d?text=P1" class="combatant-img">
+            <div class="combatant-overlay"><div id="cb-p1-name" class="combatant-name">P1</div></div>
+          </div>
+          <!-- HP / MP / BP 바 -->
+          <div style="width:160px; background:rgba(10,10,10,0.75); border:1px solid rgba(215,179,61,0.2); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#e88;">HP</span><span id="cb-p1-hp-txt" style="font-size:11px; color:#e88; font-weight:bold;">-/-</span></div>
+            <div style="height:7px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p1-hp" style="height:100%; width:100%; background:linear-gradient(90deg,#c0392b,#e74c3c); border-radius:4px; transition:width 0.4s;"></div></div>
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#7ab;">MP</span><span id="cb-p1-mp-txt" style="font-size:11px; color:#7ab; font-weight:bold;">-/-</span></div>
+            <div style="height:5px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p1-mp" style="height:100%; width:100%; background:#4c8bf5; border-radius:4px; transition:width 0.4s;"></div></div>
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#d7b33d;">BP</span><span id="cb-p1-bp-txt" style="font-size:11px; color:#d7b33d; font-weight:bold;">-/-</span></div>
+            <div style="height:5px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p1-bp" style="height:100%; width:100%; background:#d7b33d; border-radius:4px; transition:width 0.4s;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 캐릭터 카드 -->
+      <div class="combat-char p2-side">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div class="combatant-card" data-id="p2" style="width:160px;">
+            <img id="cb-p2-img" src="https://placehold.co/160x160/1a1817/4c8bf5?text=P2" class="combatant-img">
+            <div class="combatant-overlay"><div id="cb-p2-name" class="combatant-name">P2</div></div>
+          </div>
+          <div style="width:160px; background:rgba(10,10,10,0.75); border:1px solid rgba(76,139,245,0.2); border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#e88;">HP</span><span id="cb-p2-hp-txt" style="font-size:11px; color:#e88; font-weight:bold;">-/-</span></div>
+            <div style="height:7px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p2-hp" style="height:100%; width:100%; background:linear-gradient(90deg,#c0392b,#e74c3c); border-radius:4px; transition:width 0.4s;"></div></div>
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#7ab;">MP</span><span id="cb-p2-mp-txt" style="font-size:11px; color:#7ab; font-weight:bold;">-/-</span></div>
+            <div style="height:5px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p2-mp" style="height:100%; width:100%; background:#4c8bf5; border-radius:4px; transition:width 0.4s;"></div></div>
+            <div style="display:flex; justify-content:space-between;"><span style="font-size:11px; color:#d7b33d;">BP</span><span id="cb-p2-bp-txt" style="font-size:11px; color:#d7b33d; font-weight:bold;">-/-</span></div>
+            <div style="height:5px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden;"><div id="cb-p2-bp" style="height:100%; width:100%; background:#d7b33d; border-radius:4px; transition:width 0.4s;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 베팅 패널 -->
+      <div class="betting-panel p2-bet-panel">
+        <div class="bet-title" style="color:var(--safe);">Bet on P2</div>
+        <div class="bet-action">
+          <div class="my-money">Balance: <strong id="bet-my-money-p2" style="color:var(--safe);">-</strong></div>
+          <div style="display:flex; gap:5px; margin-bottom:10px;">
+            <input type="number" id="bet-amt-p2" class="auth-input bet-input" placeholder="G" min="1">
+            <button class="auth-btn btn-bet btn-bet-safe" onclick="CombatSys.bet('p2')">Bet</button>
+          </div>
+        </div>
+        <div class="bettor-list-title" style="color:var(--safe);">Current Bets</div>
+        <div id="p2-bettors" class="bettor-list"></div>
+      </div>
+
+    </div><!-- /solo-arena-stage -->
+
+    <!-- 전투 로그 + 조작 패널 -->
+    <div class="combat-bottom-stage" style="grid-template-columns:1fr 440px;">
+      <div id="combat-log" class="enhanced-log"></div>
+      <div class="action-panel-container" style="padding:22px 24px;">
+        <div class="action-title">Actions</div>
+        <div id="combat-actions" class="grid-actions" style="display:block; width:100%;"></div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /sparring-arena -->
+
+
+<!-- ══════════════════════════════════════════════
+     Raid 전투 모달
+     Raid.js의 initRaid()가 이 DOM을 사용
+     buildRaidDOM()은 이 고정 구조를 그대로 씀
+══════════════════════════════════════════════ -->
+<div id="raid-arena-modal" class="combat-fullscreen-modal"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+         background:rgba(0,0,0,0.92); z-index:9999; justify-content:center; align-items:center;">
+  <div style="width:96%; max-width:1300px; height:93vh; background:#12100e; border-radius:14px;
+              border:1px solid #5a2020; overflow:hidden; font-family:'Nanum Myeongjo',serif;
+              display:grid;
+              grid-template-rows:52px 1fr;
+              grid-template-columns:1fr 340px;
+              grid-template-areas:'header header' 'field sidebar';">
+
+    <!-- 레이드 헤더 (보스 이름 / 라운드 배너 / 후퇴 버튼) -->
+    <div style="grid-area:header; display:flex; justify-content:space-between; align-items:center;
+                padding:0 22px; border-bottom:1px solid #3a1a0a; background:#1a0a0a;">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <h2 id="raid-boss-name-ui" style="color:#ff4d4d; margin:0; font-size:1.3rem; letter-spacing:3px;">Boss Raid</h2>
+        <span id="raid-round-banner" style="color:#7a5a18; font-size:0.8rem; letter-spacing:3px;">Standby</span>
+      </div>
+      <!-- exitRaid() — 하단 인라인 스크립트에 정의 -->
+      <button onclick="exitRaid()"
+              style="background:transparent; border:1px solid #5a1a10; color:#ff5a3a;
+                     padding:5px 16px; border-radius:5px; cursor:pointer; font-size:0.85rem;
+                     font-family:'Nanum Myeongjo',serif; letter-spacing:1px;">Retreat</button>
+    </div>
+
+    <!-- 전장 (보스 + 파티원) -->
+    <main id="raidField"
+          style="grid-area:field; display:flex; flex-direction:column;
+                 overflow-y:auto; background:#0a0807; border-right:1px solid #2a1a0a;">
+
+      <!-- 보스 구역 (raidBossArea — Raid.js가 동적 렌더링) -->
+      <section style="padding:14px 16px 12px; border-bottom:1px solid #2a1a0a;
+                      background:linear-gradient(to bottom,rgba(30,8,8,.4),transparent); flex-shrink:0;">
+        <div style="font-size:10px; color:#3a2a0a; letter-spacing:3px; text-align:center; margin-bottom:10px;">BOSS</div>
+        <div id="raidBossArea"></div>
+      </section>
+
+      <!-- 파티원 구역 (raidPartyArea — Raid.js가 동적 렌더링) -->
+      <section style="padding:14px 16px 18px; flex:1;">
+        <div style="font-size:10px; color:#3a2a0a; letter-spacing:3px; text-align:center; margin-bottom:10px;">PARTY</div>
+        <div id="raidPartyArea"
+             style="display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:9px;"></div>
+      </section>
+    </main>
+
+    <!-- 사이드바 (전투 로그 + 조작 패널) -->
+    <aside style="grid-area:sidebar; display:flex; flex-direction:column; background:#0a0704; overflow:hidden;">
+      <!-- 전투 로그 -->
+      <div style="flex:1; display:flex; flex-direction:column; overflow:hidden; border-bottom:1px solid #2a1a0a; min-height:0;">
+        <div style="padding:8px 14px; font-size:10px; color:#3a2a0a; letter-spacing:2px;
+                    border-bottom:1px solid #2a1a0a; background:#120e08; flex-shrink:0;">
+          COMBAT LOG
+        </div>
+        <!-- addLog() — 하단 인라인 스크립트에 정의 -->
+        <div id="raid-combat-log"
+             style="flex:1; overflow-y:auto; padding:8px 12px; display:flex; flex-direction:column;
+                    gap:1px; scrollbar-width:thin; scrollbar-color:#2a1a0a transparent;">
+          <div style="color:#3a2a0a; font-size:0.85rem;">Preparing for battle...</div>
+        </div>
+      </div>
+      <!-- 조작 패널 (raidActionArea — Raid.js가 버튼 동적 렌더링) -->
+      <div id="raidActionArea"
+           style="flex-shrink:0; background:#120e08; border-top:1px solid #2a1a0a;
+                  overflow-y:auto; max-height:52vh;">
+        <div style="text-align:center; color:#3a2a0a; font-size:0.85rem; padding:20px;">Standby...</div>
+      </div>
+    </aside>
+
+  </div>
+</div><!-- /raid-arena-modal -->
+
+
+<!-- ══════════════════════════════════════════════
+     이미지 라이트박스
 ══════════════════════════════════════════════ -->
 <div id="image-lightbox" class="lightbox-overlay" onclick="closeLightbox()">
   <span class="lightbox-close">&times;</span>
-  <img id="lightbox-img" class="lightbox-content" alt="확대 이미지">
+  <img id="lightbox-img" class="lightbox-content" alt="Enlarged image">
 </div>
 
 
@@ -584,7 +1103,7 @@
 
 
 <!-- ══════════════════════════════════════════════
-     기본 정보 편집 모달 (로그인한 사용자가 자신의 캐릭터를 수정)
+     기본 정보 편집 모달 (Character.js의 saveGeneralData() 사용)
 ══════════════════════════════════════════════ -->
 <div id="edit-modal" class="auth-overlay">
   <div class="auth-box" style="width:480px; padding:35px;">
@@ -593,14 +1112,13 @@
 
     <div style="background:rgba(0,0,0,0.4); padding:20px; border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
       <input type="hidden" id="current-profile-img">
-
       <div class="info-row" style="margin-bottom:12px; display:flex; align-items:center;">
         <span style="width:85px; color:#666; font-weight:bold;">Profile Image</span>
         <input type="file" id="edit-profile-file" accept="image/*" class="modal-inline-input" style="padding-top:3px; font-size:0.85rem;">
       </div>
       <div class="info-row" style="margin-bottom:12px; display:flex; align-items:center;">
         <span style="width:85px; color:#aaa; font-weight:bold;">Quote</span>
-        <input type="text" id="edit-quote" class="modal-inline-input" placeholder="한마디 대사">
+        <input type="text" id="edit-quote" class="modal-inline-input" placeholder="Character catchphrase">
       </div>
       <div class="info-row" style="margin-bottom:12px; display:flex; align-items:center;">
         <span style="width:85px; color:#666; font-weight:bold;">Job</span>
@@ -625,7 +1143,7 @@
     </div>
 
     <h3 style="font-size:1rem; color:#aaa; margin:20px 0 10px;">Backstory</h3>
-    <textarea id="edit-backstory" class="modal-inline-textarea" placeholder="캐릭터 소개를 입력하세요..."></textarea>
+    <textarea id="edit-backstory" class="modal-inline-textarea" placeholder="Write character backstory..."></textarea>
 
     <button id="save-btn" class="auth-btn" onclick="saveGeneralData()" style="margin-top:25px; font-weight:bold;">Save Changes</button>
   </div>
@@ -633,12 +1151,13 @@
 
 
 <!-- ══════════════════════════════════════════════
-     능력치 편집 모달
+     능력치 편집 모달 (saveStatsToDB — Character.js)
 ══════════════════════════════════════════════ -->
 <div id="stats-modal" class="auth-overlay">
   <div class="auth-box" style="width:400px; padding:35px;">
     <span class="auth-close" onclick="closeModal('stats-modal')">&times;</span>
     <h2 style="text-align:center; color:#aaa; letter-spacing:2px; margin-bottom:25px;">Edit Stats</h2>
+    <!-- Character.js가 이 컨테이너에 입력 필드를 동적으로 생성 -->
     <div id="stats-inputs-container"
          style="display:grid; grid-template-columns:1fr 1fr; gap:15px;
                 background:rgba(0,0,0,0.4); padding:20px; border-radius:8px;
@@ -650,20 +1169,127 @@
 
 
 <!-- ══════════════════════════════════════════════
-     인벤토리 모달
+     무기·전투 스탯 편집 모달
+     saveWeaponData() — Combat.js / Character_combat_patch.js
+══════════════════════════════════════════════ -->
+<style>
+  /* 무기 모달 전용 스타일 (영원록 v2의 .wm-* 클래스 체계) */
+  #weapon-modal { display:none!important; position:fixed!important; inset:0!important;
+                  width:100%!important; height:100%!important; background:rgba(0,0,0,0.78)!important;
+                  z-index:9500!important; justify-content:center!important; align-items:flex-start!important;
+                  padding:40px 20px!important; box-sizing:border-box!important; overflow-y:auto!important; }
+  #weapon-modal.show { display:flex!important; }
+  #weapon-modal-inner { width:100%; max-width:540px; margin:auto; background:#12100e;
+                        border:1px solid rgba(215,179,61,0.35); border-radius:14px; padding:28px 30px 26px;
+                        box-shadow:0 12px 40px rgba(0,0,0,0.9); position:relative; box-sizing:border-box; }
+  .wm-close-btn  { position:absolute; top:12px; right:16px; background:none; border:none; color:#666; font-size:22px; cursor:pointer; }
+  .wm-close-btn:hover { color:#bbb; }
+  .wm-title      { text-align:center; color:var(--accent-color,#d7b33d); letter-spacing:4px; margin:0 0 22px; font-family:'Nanum Myeongjo',serif; font-size:1.25rem; }
+  .wm-hpmp-grid  { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .wm-stat-card  { border-radius:8px; padding:12px 10px; text-align:center; }
+  .wm-stat-card.hp { background:#1a0a0a; border:1px solid rgba(231,76,60,.4); }
+  .wm-stat-card.mp { background:#0a0f1e; border:1px solid rgba(76,139,245,.4); }
+  .wm-stat-card-label { color:#777; font-size:0.7rem; letter-spacing:1px; margin-bottom:4px; }
+  .wm-stat-card.hp .wm-stat-card-val { color:#e74c3c; }
+  .wm-stat-card.mp .wm-stat-card-val { color:#4c8bf5; }
+  .wm-section    { background:#0a0908; border:1px solid #1e1c18; border-radius:10px; padding:14px 15px; margin-bottom:14px; }
+  .wm-section-label { font-size:0.8rem; font-weight:bold; letter-spacing:1px; margin-bottom:12px; }
+  .wm-section-label.gold  { color:#d7b33d; }
+  .wm-section-label.green { color:#4caf50; }
+  .wm-grid  { display:grid; grid-template-columns:1fr 1fr; gap:11px 18px; }
+  .wm-field > label { display:block; color:#888; font-size:0.72rem; margin-bottom:5px; }
+  .wm-field > label > span { color:#444; }
+  .wm-input { width:100%; box-sizing:border-box; margin:0; background:#0d0c0a; border:1px solid #2a2520;
+              border-radius:6px; color:#e0d8c0; font-size:0.95rem; padding:8px 10px; outline:none; transition:border-color .2s;
+              -moz-appearance:textfield; }
+  .wm-input::-webkit-outer-spin-button,.wm-input::-webkit-inner-spin-button { -webkit-appearance:none; }
+  .wm-input:focus { border-color:rgba(215,179,61,.5); }
+  .wm-input.red  { color:#ff5a5a; font-weight:bold; }
+  .wm-input.gold { color:#d7b33d; font-weight:bold; }
+  .wm-input.green{ color:#4caf50; border-color:#1a3a1a; }
+  /* 무기 행 레이아웃 */
+  .weapon-row     { background:#0a0908; border:1px solid #2a2520; border-radius:8px; padding:13px; margin-bottom:10px; display:flex; flex-direction:column; gap:9px; }
+  .weapon-row-top { display:grid; grid-template-columns:2fr 1fr 1.2fr auto; gap:8px; align-items:center; }
+  .wp-name,.wp-dmg,.wp-type,.wp-desc { box-sizing:border-box; background:#12100e; border:1px solid #222; border-radius:6px; color:#fff; padding:8px 10px; font-size:0.9rem; outline:none; width:100%; }
+  .wp-dmg   { color:#ff4d4d; font-weight:bold; text-align:center; }
+  .wp-desc  { color:#888; font-size:0.82rem; }
+  .wp-del-btn { background:#3a1010; color:#ff9999; border:1px solid #5a2020; border-radius:6px; padding:8px 11px; cursor:pointer; font-weight:bold; white-space:nowrap; }
+  .wp-del-btn:hover { background:#5a1a1a; }
+  .wm-save-btn { width:100%; padding:13px; background:#1c1a18; color:#ccc; border:1px solid #333; border-radius:8px; font-weight:bold; font-size:1rem; cursor:pointer; transition:all .2s; margin-top:4px; }
+  .wm-save-btn:hover { background:#2a2520; color:#d7b33d; border-color:rgba(215,179,61,.4); }
+  .wm-weapon-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .wm-weapon-title  { font-size:1rem; color:var(--accent-color,#d7b33d); margin:0; font-family:'Nanum Myeongjo',serif; }
+  .wm-add-btn { background:transparent; border:1px solid #444; color:#888; border-radius:6px; padding:6px 14px; font-size:0.8rem; cursor:pointer; transition:.2s; }
+  .wm-add-btn:hover { border-color:#d7b33d; color:#d7b33d; }
+</style>
+<div id="weapon-modal">
+  <div id="weapon-modal-inner">
+    <button class="wm-close-btn" onclick="closeModal('weapon-modal')">&times;</button>
+    <h2 class="wm-title">Combat Stats</h2>
+
+    <!-- HP / MP 입력 -->
+    <div class="wm-hpmp-grid">
+      <div class="wm-stat-card hp">
+        <div class="wm-stat-card-label">MAX HP</div>
+        <input type="number" id="edit-hp-stat" class="wm-input" style="font-size:1.5rem; font-weight:bold; color:#e74c3c; text-align:center; padding:4px; margin-top:4px;" placeholder="Enter value">
+      </div>
+      <div class="wm-stat-card mp">
+        <div class="wm-stat-card-label">MAX MP</div>
+        <input type="number" id="edit-mp-stat" class="wm-input" style="font-size:1.5rem; font-weight:bold; color:#4c8bf5; text-align:center; padding:4px; margin-top:4px;" placeholder="Enter value">
+      </div>
+    </div>
+
+    <!-- 전투 기능치 -->
+    <div class="wm-section">
+      <div class="wm-section-label gold">Combat Skills</div>
+      <div class="wm-grid">
+        <div class="wm-field"><label>Brawl <span>(default 25)</span></label><input type="number" id="edit-brawl-stat" class="wm-input red" placeholder="25"></div>
+        <div class="wm-field"><label>Sword <span>(default 25)</span></label><input type="number" id="edit-sword-stat" class="wm-input" placeholder="25"></div>
+        <div class="wm-field"><label>Bow <span>(default 25)</span></label><input type="number" id="edit-bow-stat" class="wm-input" placeholder="25"></div>
+        <div class="wm-field"><label>Throw <span>(default 20)</span></label><input type="number" id="edit-throw-stat" class="wm-input" placeholder="20"></div>
+        <div class="wm-field"><label>Magic <span>(default 15)</span></label><input type="number" id="edit-magic-stat" class="wm-input" placeholder="15"></div>
+        <div class="wm-field"><label>Dodge <span>(DEX / 2)</span></label><input type="number" id="edit-dodge-stat" class="wm-input" placeholder="0"></div>
+        <div class="wm-field"><label>Drive <span>(Initiative)</span></label><input type="number" id="edit-drive-stat" class="wm-input" placeholder="20"></div>
+        <div class="wm-field"><label>Sanity <span>(BP max)</span></label><input type="number" id="edit-bp-stat" class="wm-input gold" placeholder="100"></div>
+      </div>
+    </div>
+
+    <!-- 의료 기능치 -->
+    <div class="wm-section">
+      <div class="wm-section-label green">Medical Skills</div>
+      <div class="wm-grid">
+        <div class="wm-field"><label>First Aid <span>(1d3 / max on extreme)</span></label><input type="number" id="edit-firstaid-stat" class="wm-input green" placeholder="35"></div>
+        <div class="wm-field"><label>Medicine <span>(1d5 / can revive)</span></label><input type="number" id="edit-medic-stat" class="wm-input green" placeholder="1"></div>
+      </div>
+    </div>
+
+    <!-- 무기 목록 (addWeaponRow — Combat.js) -->
+    <div class="wm-weapon-header">
+      <h3 class="wm-weapon-title">Weapons</h3>
+      <button class="wm-add-btn" onclick="addWeaponRow()">+ Add Weapon</button>
+    </div>
+    <div id="weapon-list-container" style="max-height:220px; overflow-y:auto; margin-bottom:18px;"></div>
+
+    <button class="wm-save-btn" onclick="saveWeaponData()">Save Combat Stats</button>
+  </div>
+</div><!-- /weapon-modal -->
+
+
+<!-- ══════════════════════════════════════════════
+     인벤토리 모달 (saveInventoryToDB — Features.js)
 ══════════════════════════════════════════════ -->
 <div id="inv-modal" class="auth-overlay">
   <div class="auth-box" style="width:550px; padding:35px;">
     <span class="auth-close" onclick="closeModal('inv-modal')">&times;</span>
     <h2 style="text-align:center; color:#aaa; letter-spacing:2px; margin-bottom:20px;">Inventory</h2>
 
-    <!-- 소지품 / 보관함 탭 -->
+    <!-- 소지품 / 보관함 탭 (changeInvTab — Features.js) -->
     <div class="phase-tabs" id="inv-tabs" style="margin-bottom:15px; grid-template-columns:1fr 1fr;">
       <button class="phase-btn active" onclick="changeInvTab('general')">Items</button>
       <button class="phase-btn" onclick="changeInvTab('furniture')">Storage</button>
     </div>
 
-    <!-- 인벤토리 그리드 (20칸) -->
+    <!-- 인벤토리 슬롯 그리드 (Features.js가 동적 생성) -->
     <div id="inv-modal-grid" class="rpg-inventory" style="margin:0 auto 20px auto; justify-content:center;"></div>
 
     <!-- 선택된 슬롯 편집 폼 -->
@@ -672,13 +1298,15 @@
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h3 id="inv-slot-title" style="color:#aaa; margin:0; font-size:1rem;">Slot N</h3>
         <div>
-          <button id="inv-use-btn"  onclick="window.useInvItemOne()" style="display:none; background:#444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Use ×1</button>
-          <button id="inv-gift-btn" onclick="openGiftModal()"        style="display:none; background:#2a4a2a; color:#8f8; border:1px solid #4a6; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Send</button>
+          <!-- useInvItemOne — 하단 인라인 스크립트에서 가구 생성권 훅 적용 -->
+          <button id="inv-use-btn" onclick="window.useInvItemOne()" style="display:none; background:#444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Use x1</button>
+          <!-- openGiftModal — Features.js -->
+          <button id="inv-gift-btn" onclick="openGiftModal()" style="display:none; background:#2a4a2a; color:#8f8; border:1px solid #4a6; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Send</button>
           <button onclick="deleteInvSlot()" style="background:#440000; color:#f88; border:1px solid #622; padding:5px 10px; border-radius:4px; cursor:pointer; font-weight:bold;">Clear</button>
         </div>
       </div>
       <div style="display:flex; gap:10px; margin-bottom:10px;">
-        <input type="text" id="inv-slot-name" placeholder="Item Name" class="modal-inline-input" style="flex:1;">
+        <input type="text" id="inv-slot-name" placeholder="Item Name"   class="modal-inline-input" style="flex:1;">
         <input type="text" id="inv-slot-desc" placeholder="Description" class="modal-inline-input" style="flex:2;">
       </div>
       <div style="display:flex; gap:10px; align-items:center;">
@@ -689,33 +1317,71 @@
 
     <button id="inv-save-btn" class="auth-btn" onclick="window.saveInventoryToDB()" style="margin-top:25px; font-weight:bold;">Save Inventory</button>
   </div>
-</div>
+</div><!-- /inv-modal -->
 
 
 <!-- ══════════════════════════════════════════════
-     선물(우편) 보내기 모달
+     가구 DIY 제작 모달
+     submitDiyFurniture() — 하단 인라인 스크립트에 정의
+══════════════════════════════════════════════ -->
+<div id="diy-modal" class="auth-overlay">
+  <div class="auth-box" style="width:400px; padding:30px; border:1px solid #555; background:#1a1817;">
+    <span class="auth-close" onclick="document.getElementById('diy-modal').classList.remove('show')">&times;</span>
+    <h2 style="text-align:center; color:#aaa; margin-bottom:20px;">Furniture Workshop</h2>
+    <div style="display:flex; flex-direction:column; gap:15px;">
+      <div>
+        <label style="color:#888; font-size:0.85rem;">Furniture Name</label>
+        <input type="text" id="diy-name" class="auth-input" style="margin-top:5px;" placeholder="e.g. Stuffed Bear">
+      </div>
+      <div>
+        <label style="color:#888; font-size:0.85rem;">Description</label>
+        <input type="text" id="diy-desc" class="auth-input" style="margin-top:5px;" placeholder="A handmade piece of furniture.">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1;">
+          <label style="color:#888; font-size:0.85rem;">Width (default: 80)</label>
+          <input type="number" id="diy-width" class="auth-input" style="margin-top:5px;" value="80">
+        </div>
+        <div style="flex:1;">
+          <label style="color:#888; font-size:0.85rem;">Height (default: 80)</label>
+          <input type="number" id="diy-height" class="auth-input" style="margin-top:5px;" value="80">
+        </div>
+      </div>
+      <div>
+        <label style="color:#888; font-size:0.85rem;">Furniture Image (transparent PNG recommended)</label>
+        <input type="file" id="diy-file" accept="image/*" class="auth-input" style="margin-top:5px; padding:5px;">
+      </div>
+      <button id="diy-submit-btn" class="auth-btn" style="margin-top:10px;" onclick="submitDiyFurniture()">
+        Craft Furniture (uses 1 Creation Ticket)
+      </button>
+    </div>
+  </div>
+</div><!-- /diy-modal -->
+
+
+<!-- ══════════════════════════════════════════════
+     선물(우편) 보내기 모달 (sendGift — Features.js)
+     ✏️ option의 value와 텍스트를 실제 캐릭터와 맞추세요
 ══════════════════════════════════════════════ -->
 <div id="gift-modal" class="auth-overlay">
   <div class="auth-box" style="width:350px; padding:30px; text-align:center; border:1px solid #333;">
     <span class="auth-close" onclick="closeModal('gift-modal')">&times;</span>
     <h2 style="color:#aaa; margin-bottom:15px; letter-spacing:2px;">Send Gift</h2>
-    <p style="color:#666; font-size:0.85rem; margin-bottom:20px;">누구에게 보낼까요?</p>
-
-    <!-- ✏️  캐릭터 목록이 많아지면 여기에 option을 추가하세요 -->
+    <p style="color:#666; font-size:0.85rem; margin-bottom:20px;">Who would you like to send it to?</p>
+    <!-- ✏️ 캐릭터 목록을 실제 charData ID와 맞추세요 (더미: 가나/나다/다라/라마) -->
     <select id="gift-target" class="auth-input" style="width:100%; margin-bottom:20px; background:#111; color:#fff; border:1px solid #333;">
-      <option value="char-가나">가나다</option>
-      <option value="char-다라">다라마</option>
-      <option value="char-마바">마바사</option>
-      <option value="char-사아">사아자</option>
+      <option value="char-p1">가나</option>
+      <option value="char-p2">나다</option>
+      <option value="char-p3">다라</option>
+      <option value="char-p4">라마</option>
     </select>
-
     <button id="send-gift-btn" class="auth-btn" onclick="sendGift()">Send</button>
   </div>
-</div>
+</div><!-- /gift-modal -->
 
 
 <!-- ══════════════════════════════════════════════
-     우편함 모달
+     우편함 모달 (Features.js가 mailbox-list 동적 렌더링)
 ══════════════════════════════════════════════ -->
 <div id="mailbox-modal" class="auth-overlay">
   <div class="auth-box" style="width:450px; padding:30px; border:1px solid #333;">
@@ -726,11 +1392,12 @@
       <button class="auth-btn" onclick="closeModal('mailbox-modal')" style="background:#222; color:#aaa; width:auto; padding:10px 40px;">Close</button>
     </div>
   </div>
-</div>
+</div><!-- /mailbox-modal -->
 
 
 <!-- ══════════════════════════════════════════════
      소지금 관리 모달 (관리자 전용)
+     processMoney('add'|'sub') — Features.js
 ══════════════════════════════════════════════ -->
 <div id="money-modal" class="auth-overlay">
   <div class="auth-box" style="width:350px; text-align:center; border:1px solid #333;">
@@ -741,18 +1408,18 @@
     </p>
     <div style="text-align:left; margin-bottom:20px;">
       <label style="color:#666; font-size:0.85rem;">Amount</label>
-      <input type="number" id="money-amount" class="auth-input" style="margin-top:5px;" placeholder="ex: 100" min="1">
+      <input type="number" id="money-amount" class="auth-input" style="margin-top:5px;" placeholder="e.g. 100" min="1">
     </div>
     <div style="display:flex; gap:10px;">
       <button class="auth-btn" onclick="window.processMoney('add')" style="background:#1a2a1a; color:#4a4; border:1px solid #2a4a2a;">+ Add</button>
       <button class="auth-btn" onclick="window.processMoney('sub')" style="background:#2a1a1a; color:#a44; border:1px solid #4a2a2a;">- Subtract</button>
     </div>
   </div>
-</div>
+</div><!-- /money-modal -->
 
 
 <!-- ══════════════════════════════════════════════
-     관계도 노드 편집 모달
+     관계도 노드 편집 모달 (Map.js)
 ══════════════════════════════════════════════ -->
 <div id="node-edit-modal" class="auth-overlay">
   <div class="auth-box" style="width:400px; padding:30px; border:1px solid #333;">
@@ -768,171 +1435,286 @@
       <input type="text" id="node-img" class="auth-input" style="margin-top:5px;" placeholder="https://...">
     </div>
     <div style="margin-bottom:15px;">
-      <label style="color:#666; font-size:0.85rem;">Group</label>
+      <label style="color:#666; font-size:0.85rem;">Group / Faction</label>
+      <!-- Map.js가 faction 목록으로 동적 populate -->
       <select id="node-faction" class="auth-input" style="padding:8px; margin-top:5px;" onchange="toggleNewFactionFields(this.value)"></select>
     </div>
+    <!-- 새 진영 추가 시 노출되는 추가 입력 필드 -->
     <div id="new-faction-fields" style="display:none; background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; margin-bottom:15px;">
       <div style="margin-bottom:10px;">
-        <label style="color:#666; font-size:0.8rem;">Group Name</label>
+        <label style="color:#666; font-size:0.8rem;">Faction Name</label>
         <input type="text" id="new-faction-name" class="auth-input" style="padding:5px; margin-top:5px;">
       </div>
       <div>
-        <label style="color:#666; font-size:0.8rem;">Group Color</label>
+        <label style="color:#666; font-size:0.8rem;">Faction Color</label>
         <input type="color" id="new-faction-color" style="width:100%; height:30px; border:none; margin-top:5px;" value="#888888">
       </div>
     </div>
     <button class="auth-btn" onclick="applyNodeEdit()" style="font-size:1rem;">Apply</button>
     <button class="auth-btn" id="btn-delete-node" onclick="deleteNode()" style="background:#330000; color:#f88; border:1px solid #660000; margin-top:10px; font-size:1rem;">Delete Node</button>
   </div>
-</div>
+</div><!-- /node-edit-modal -->
 
 
 <!-- ══════════════════════════════════════════════
-     갤러리 답글 모달
+     갤러리 답글 모달 (submitReply — Features.js)
 ══════════════════════════════════════════════ -->
 <div id="reply-modal" class="auth-overlay">
   <div class="auth-box" style="width:450px; padding:35px; border:1px solid #333;">
     <span class="auth-close" onclick="closeModal('reply-modal')">&times;</span>
     <h2 style="text-align:center; color:#aaa; letter-spacing:2px; margin-bottom:20px;">Reply</h2>
     <input type="hidden" id="reply-parent-id">
-    <textarea id="reply-modal-content" class="modal-inline-textarea" style="height:100px; margin-bottom:15px;" placeholder="댓글을 입력하세요..."></textarea>
+    <textarea id="reply-modal-content" class="modal-inline-textarea" style="height:100px; margin-bottom:15px;" placeholder="Write a reply..."></textarea>
     <div style="display:flex; gap:10px; align-items:center;">
       <input type="file" id="reply-modal-file" accept="image/*" style="flex-grow:1; color:#666; font-size:0.85rem;">
       <button class="auth-btn" style="width:80px; margin:0;" onclick="submitReply()">Post</button>
     </div>
   </div>
-</div>
-
-
-<!-- ══════════════════════════════════════════════
-     무기/전투 스탯 편집 모달
-══════════════════════════════════════════════ -->
-<div id="weapon-modal" class="auth-overlay">
-  <div class="auth-box" style="width:520px; padding:35px; max-height:85vh; overflow-y:auto;">
-    <span class="auth-close" onclick="closeModal('weapon-modal')">&times;</span>
-    <h2 style="text-align:center; color:#aaa; letter-spacing:2px; margin-bottom:25px;">Combat Stats</h2>
-
-    <!-- HP / MP -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
-      <div style="background:rgba(0,0,0,0.4); border:1px solid #333; border-radius:8px; padding:12px; text-align:center;">
-        <div style="color:#666; font-size:0.75rem; margin-bottom:5px;">Max HP</div>
-        <input type="number" id="edit-hp-stat" class="modal-inline-input" style="font-size:1.3rem; font-weight:bold; color:#888; text-align:center; padding:4px; margin-bottom:0;" placeholder="10">
-      </div>
-      <div style="background:rgba(0,0,0,0.4); border:1px solid #333; border-radius:8px; padding:12px; text-align:center;">
-        <div style="color:#666; font-size:0.75rem; margin-bottom:5px;">Max MP</div>
-        <input type="number" id="edit-mp-stat" class="modal-inline-input" style="font-size:1.3rem; font-weight:bold; color:#777; text-align:center; padding:4px; margin-bottom:0;" placeholder="10">
-      </div>
-    </div>
-
-    <!-- 전투 기능치 -->
-    <div style="background:rgba(0,0,0,0.3); border:1px solid #222; border-radius:8px; padding:14px; margin-bottom:14px;">
-      <div style="font-size:0.8rem; color:#777; font-weight:bold; margin-bottom:12px; letter-spacing:1px;">COMBAT SKILLS</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Brawl (기본 25)</label><input type="number" id="edit-brawl-stat" class="modal-inline-input" placeholder="25" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Sword (기본 25)</label><input type="number" id="edit-sword-stat" class="modal-inline-input" placeholder="25" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Bow (기본 25)</label>  <input type="number" id="edit-bow-stat"   class="modal-inline-input" placeholder="25" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Throw (기본 20)</label><input type="number" id="edit-throw-stat"  class="modal-inline-input" placeholder="20" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Magic (기본 15)</label><input type="number" id="edit-magic-stat"  class="modal-inline-input" placeholder="15" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Dodge</label>         <input type="number" id="edit-dodge-stat"  class="modal-inline-input" placeholder="30" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Drive</label>         <input type="number" id="edit-drive-stat"  class="modal-inline-input" placeholder="20" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Sanity</label>        <input type="number" id="edit-bp-stat"     class="modal-inline-input" placeholder="100" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">First Aid</label>     <input type="number" id="edit-firstaid-stat" class="modal-inline-input" placeholder="35" style="margin-bottom:0;"></div>
-        <div><label style="display:block; color:#555; font-size:0.72rem; margin-bottom:4px;">Medicine</label>      <input type="number" id="edit-medic-stat"  class="modal-inline-input" placeholder="1"  style="margin-bottom:0;"></div>
-      </div>
-    </div>
-
-    <!-- 무기 목록 -->
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-      <h3 style="color:#888; margin:0; font-family:'Nanum Myeongjo',serif;">Weapons</h3>
-      <button onclick="addWeaponRow()" style="background:transparent; border:1px dashed #444; color:#777; border-radius:20px; padding:5px 12px; cursor:pointer;">+ Add</button>
-    </div>
-    <div id="weapon-list-container" style="max-height:200px; overflow-y:auto; margin-bottom:18px;"></div>
-
-    <button class="auth-btn wm-save-btn" onclick="saveWeaponData()" style="width:100%; padding:13px; font-weight:bold;">Save Combat Stats</button>
-  </div>
-</div>
+</div><!-- /reply-modal -->
 
 
 <!-- ══════════════════════════════════════════════
      테마 토글 버튼 (우측 하단 고정)
+     toggleTheme() — UI.js
 ══════════════════════════════════════════════ -->
 <button id="theme-toggle" class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
-  <img id="theme-icon" src="https://placehold.co/24x24/888/fff?text=☀" alt="Theme">
+  <img id="theme-icon" src="https://placehold.co/24x24/888/fff?text=TH" alt="Theme">
 </button>
 
 
 <!-- ══════════════════════════════════════════════
-     인라인 스크립트 (페이지 초기화)
+     인라인 스크립트 — 페이지 초기화 및 전역 함수 정의
+
+     이 스크립트는 defer JS 파일들이 모두 실행된 뒤
+     window 'load' 이벤트에서 초기화를 진행한다.
 ══════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-/* ─── 페이지 로드 완료 후 초기화 ─── */
+/* ════════════════════════════════════════════
+   페이지 로드 시 초기화 — defer 스크립트 완료 보장
+════════════════════════════════════════════ */
 window.addEventListener('load', function () {
 
-    /* 버튼 이벤트 연결 */
+    /* ── 버튼 이벤트 바인딩 ──
+       onclick 인라인 속성 대신 addEventListener를 사용하는 이유:
+       defer 스크립트가 로드되기 전에 onclick이 실행되면 undefined 에러 발생.
+       'load' 이벤트 안에서 바인딩하면 모든 JS가 완료된 후 실행 보장. */
     var loginBtn  = document.getElementById('do-login-btn');
     var signupBtn = document.getElementById('do-signup-btn');
     var loginNav  = document.getElementById('login-btn');
     var logoutNav = document.getElementById('logout-btn');
 
-    if (loginBtn)  loginBtn.addEventListener('click',  function () { if (typeof handleLogin  === 'function') handleLogin(); });
-    if (signupBtn) signupBtn.addEventListener('click', function () { if (typeof handleSignUp === 'function') handleSignUp(); });
-    if (loginNav)  loginNav.addEventListener('click',  function () { if (typeof openAuthModal === 'function') openAuthModal(); });
-    if (logoutNav) logoutNav.addEventListener('click', function () { if (typeof signOut === 'function') signOut(); });
+    if (loginBtn)  loginBtn.addEventListener('click',  function () { if (typeof handleLogin    === 'function') handleLogin(); });
+    if (signupBtn) signupBtn.addEventListener('click', function () { if (typeof handleSignUp   === 'function') handleSignUp(); });
+    if (loginNav)  loginNav.addEventListener('click',  function () { if (typeof openAuthModal  === 'function') openAuthModal(); });
+    if (logoutNav) logoutNav.addEventListener('click', function () { if (typeof signOut        === 'function') signOut(); });
 
-    /* 각 시스템 초기화 */
-    if (typeof loadTheme              === 'function') loadTheme();              /* 저장된 테마 적용 */
-    if (typeof initCharacterPages     === 'function') initCharacterPages();     /* 캐릭터 페이지 생성 */
-    if (typeof initDefaultInventories === 'function') initDefaultInventories(); /* 인벤토리 기본값 */
-    if (typeof checkLoginState        === 'function') checkLoginState();        /* 로그인 상태 확인 */
-    if (typeof loadCharacterData      === 'function') loadCharacterData();      /* DB에서 데이터 로드 */
-    if (typeof renderShop             === 'function') renderShop();             /* 상점 렌더링 */
-    if (typeof buildCalendar          === 'function') buildCalendar();          /* 캘린더 렌더링 */
-    if (typeof createDust             === 'function') createDust();             /* 배경 파티클 */
-    if (typeof updateHomeSlider       === 'function') updateHomeSlider();       /* 슬라이더 초기화 */
+    /* ── 시스템 초기화 순서 ──
+       loadTheme              — 저장된 라이트/다크 테마 복원
+       initCharacterPages     — Config.js의 charData 배열로 캐릭터 탭 DOM 생성
+       initDefaultInventories — 캐릭터별 인벤토리 초기 슬롯 설정
+       checkLoginState        — Supabase 세션 확인 → 로그인 상태 UI 갱신
+       loadCharacterData      — DB에서 능력치·프로필·인벤토리 불러오기
+       renderShop             — 상점 상품 목록 렌더링
+       buildCalendar          — 사이드바 달력 렌더링
+       createDust             — 배경 파티클 애니메이션 생성
+       updateHomeSlider       — 홈 슬라이더 초기 위치 설정              -->
+    if (typeof loadTheme              === 'function') loadTheme();
+    if (typeof initCharacterPages     === 'function') initCharacterPages();
+    if (typeof initDefaultInventories === 'function') initDefaultInventories();
+    if (typeof checkLoginState        === 'function') checkLoginState();
+    if (typeof loadCharacterData      === 'function') loadCharacterData();
+    if (typeof renderShop             === 'function') renderShop();
+    if (typeof buildCalendar          === 'function') buildCalendar();
+    if (typeof createDust             === 'function') createDust();
+    if (typeof updateHomeSlider       === 'function') updateHomeSlider();
 
-    /* 약간 지연 후 실행되어야 하는 것들 */
+    /* 레이더 차트: DOM이 완전히 그려진 후 500ms 뒤에 그려야 캔버스 크기가 정확함 */
     setTimeout(function () {
-        if (typeof drawAllRadarCharts === 'function') drawAllRadarCharts(); /* 레이더 차트 */
+        if (typeof drawAllRadarCharts === 'function') drawAllRadarCharts();
     }, 500);
 
+    /* 로그 파싱 / 관계 뱃지: 세션 로그 HTML이 먼저 파싱된 뒤 실행 */
     setTimeout(function () {
         if (typeof parseAllLogs        === 'function') parseAllLogs();
         if (typeof buildRelationBadges === 'function') buildRelationBadges();
     }, 300);
+
+    /* 대련 드롭다운: charData 로드 후 populate */
+    setTimeout(function () {
+        if (typeof CombatSys !== 'undefined' && typeof CombatSys.initDropdowns === 'function')
+            CombatSys.initDropdowns();
+    }, 500);
+
+    /* ── 인벤토리 "가구 생성권" 아이템 소모 훅 ──
+       useInvItemOne()을 래핑하여 아이템 이름에
+       '생성권' 또는 'DIY'가 포함되면 diy-modal을 열도록 처리.
+       기존 인벤토리 모달은 닫음.                                    */
+    setTimeout(function () {
+        var _originalUse = window.useInvItemOne;
+        window.useInvItemOne = function () {
+            var nameEl   = document.getElementById('inv-slot-name');
+            var itemName = nameEl ? nameEl.value : '';
+
+            if (itemName.includes('생성권') || itemName.includes('DIY')) {
+                /* 인벤토리 모달 닫기 */
+                var invModal = document.getElementById('inv-modal');
+                if (invModal) invModal.classList.remove('show');
+
+                /* DIY 폼 초기화 */
+                ['diy-name', 'diy-desc', 'diy-file'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                document.getElementById('diy-width').value  = '80';
+                document.getElementById('diy-height').value = '80';
+
+                /* DIY 모달 열기 */
+                document.getElementById('diy-modal').classList.add('show');
+                return;
+            }
+
+            /* 생성권이 아니면 원래 함수 실행 */
+            if (typeof _originalUse === 'function') _originalUse();
+        };
+    }, 400);
 });
 
-/* ─── 전역 타임라인 변수 ─── */
-window.globalMainPhase = 0;
 
-/* ─── 타임라인 변경 함수 (관리자 전용) ─── */
-window.setGlobalPhase = function (val) {
-    window.globalMainPhase = parseInt(val, 10);
-    alert('타임라인이 Chapter ' + (window.globalMainPhase + 1) + ' 로 변경되었습니다.');
+/* ════════════════════════════════════════════
+   가구 DIY 제작 실행 함수
+   처리 흐름:
+     1. 폼 입력값 유효성 검사
+     2. 이미지 업로드 (uploadToImgbb 또는 FileReader 폴백)
+     3. DB에서 현재 인벤토리 조회
+     4. 일반 인벤토리에서 생성권 차감
+     5. 가구 인벤토리에 신규 아이템 추가
+     6. DB 업데이트
+════════════════════════════════════════════ */
+window.submitDiyFurniture = async function () {
+    var btn         = document.getElementById('diy-submit-btn');
+    var nameInput   = document.getElementById('diy-name').value.trim();
+    var descInput   = document.getElementById('diy-desc').value.trim();
+    var widthInput  = parseInt(document.getElementById('diy-width').value)  || 80;
+    var heightInput = parseInt(document.getElementById('diy-height').value) || 80;
+    var fileInput   = document.getElementById('diy-file');
+
+    if (!nameInput)                                   return alert('Enter a furniture name.');
+    if (!fileInput.files || !fileInput.files.length)  return alert('Attach a furniture image.');
+    if (!currentUser)                                 return alert('Login required.');
+    var myCharId = charOwners[currentUser.email];
+    if (!myCharId)                                    return alert('No character permission found.');
+
+    btn.disabled  = true;
+    btn.innerText = 'Crafting...';
+
+    try {
+        /* 이미지 업로드 — uploadToImgbb가 있으면 사용, 없으면 base64 폴백 */
+        var imgUrl = '';
+        if (typeof uploadToImgbb === 'function') {
+            imgUrl = await uploadToImgbb(fileInput.files[0]);
+            if (!imgUrl) throw new Error('Image upload failed');
+        } else {
+            imgUrl = await new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onload  = function (e) { resolve(e.target.result); };
+                reader.onerror = function ()  { reject(new Error('Image read failed')); };
+                reader.readAsDataURL(fileInput.files[0]);
+            });
+        }
+
+        /* DB에서 현재 인벤토리 조회 */
+        var fetchRes = await supabaseClient
+            .from('character_profiles')
+            .select('inventory, furniture_inventory')
+            .eq('char_id', myCharId).eq('phase', 0).single();
+        if (fetchRes.error) throw fetchRes.error;
+
+        var generalInv = [], furnInv = [];
+        try { generalInv = typeof fetchRes.data.inventory           === 'string' ? JSON.parse(fetchRes.data.inventory)           : (fetchRes.data.inventory           || []); } catch(e){}
+        try { furnInv    = typeof fetchRes.data.furniture_inventory === 'string' ? JSON.parse(fetchRes.data.furniture_inventory) : (fetchRes.data.furniture_inventory || []); } catch(e){}
+        if (!Array.isArray(generalInv)) generalInv = [];
+        if (!Array.isArray(furnInv))    furnInv    = [];
+
+        /* 생성권 아이템 찾기 및 차감 */
+        var ticketIdx = generalInv.findIndex(function (it) {
+            return it && ((it.name || '').includes('생성권') || (it.name || '').includes('DIY'));
+        });
+        if (ticketIdx === -1) throw new Error('No Creation Ticket found in inventory! Buy one from the shop first.');
+
+        var ticketCount = parseInt(generalInv[ticketIdx].count) || 1;
+        if (ticketCount > 1) generalInv[ticketIdx].count = ticketCount - 1;
+        else                 generalInv.splice(ticketIdx, 1);
+
+        /* 신규 가구 아이템 생성 (tileW: 80px = 1 tile 기준) */
+        furnInv.push({
+            id:     'custom_furn_' + Date.now(),
+            name:   nameInput,
+            desc:   descInput || 'Handcrafted furniture.',
+            img:    imgUrl,
+            type:   'furniture',
+            count:  1,
+            tileW:  Math.max(1, Math.round(widthInput / 80)),
+            height: heightInput,
+        });
+
+        /* DB 업데이트 */
+        var updateRes = await supabaseClient
+            .from('character_profiles')
+            .update({
+                inventory:           JSON.stringify(generalInv),
+                furniture_inventory: JSON.stringify(furnInv),
+            })
+            .eq('char_id', myCharId).eq('phase', 0);
+        if (updateRes.error) throw updateRes.error;
+
+        alert('[' + nameInput + '] crafted!\nCheck the Storage tab in My Room > Inventory.');
+        document.getElementById('diy-modal').classList.remove('show');
+        if (typeof MyRoomSys !== 'undefined' && MyRoomSys.isEditMode) MyRoomSys._loadInventory();
+
+    } catch (e) {
+        console.error('[DIY]', e);
+        alert('Crafting error: ' + e.message);
+    } finally {
+        btn.disabled  = false;
+        btn.innerText = 'Craft Furniture (uses 1 Creation Ticket)';
+    }
 };
 
-/* ─── BGM 관련 ─── */
+
+/* ════════════════════════════════════════════
+   BGM 관련 함수
+════════════════════════════════════════════ */
 var isBgmPlaying = false;
 
-/* 유튜브 URL에서 영상 ID를 추출하는 함수 */
+/**
+ * YouTube URL에서 11자리 영상 ID 추출.
+ * youtu.be / watch?v= / embed/ 세 가지 형식 지원.
+ */
 function extractYouTubeID(url) {
     if (!url) return null;
     var m = url.match(/(?:youtu\.be\/|v=|embed\/)([^#&?]{11})/);
     return (m && m[1]) ? m[1] : null;
 }
 
-/* 캐릭터 탭으로 이동할 때 해당 캐릭터의 BGM을 세팅합니다 */
+/**
+ * 캐릭터 탭 진입 시 해당 캐릭터의 BGM을 세팅.
+ * bgmUrl이 없으면 위젯을 숨김.
+ * @param {string} bgmUrl — YouTube URL (profile.bgm_url)
+ */
 window.setupCharacterBGM = function (bgmUrl) {
     var widget    = document.getElementById('bgm-widget');
     var container = document.getElementById('bgm-player-container');
     var btn       = document.getElementById('btn-toggle-bgm');
     container.innerHTML = '';
     isBgmPlaying = false;
-    if (btn) { btn.textContent = '♪ Play BGM'; }
+    if (btn) { btn.textContent = 'Play BGM'; btn.classList.remove('playing'); }
+
     var ytId = extractYouTubeID(bgmUrl);
     if (ytId) {
         widget.style.display = 'block';
+        /* enablejsapi=1 — postMessage로 재생/정지 제어 허용 */
         container.innerHTML  = '<iframe id="yt-bgm-iframe" width="10" height="10"'
             + ' src="https://www.youtube.com/embed/' + ytId + '?enablejsapi=1&loop=1&playlist=' + ytId + '"'
             + ' frameborder="0" allow="autoplay"></iframe>';
@@ -941,21 +1723,718 @@ window.setupCharacterBGM = function (bgmUrl) {
     }
 };
 
-/* BGM 재생/정지 토글 */
+/**
+ * BGM 재생 / 정지 토글.
+ * YouTube Player API를 postMessage로 제어.
+ */
 window.toggleCharacterBGM = function () {
     var iframe = document.getElementById('yt-bgm-iframe');
     var btn    = document.getElementById('btn-toggle-bgm');
     if (!iframe) return;
+
     if (!isBgmPlaying) {
         iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        btn.textContent = '■ Stop BGM';
+        if (btn) { btn.textContent = 'Stop BGM'; btn.classList.add('playing'); }
         isBgmPlaying = true;
     } else {
         iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        btn.textContent = '♪ Play BGM';
+        if (btn) { btn.textContent = 'Play BGM'; btn.classList.remove('playing'); }
         isBgmPlaying = false;
     }
 };
+
+
+/* ════════════════════════════════════════════
+   글로벌 타임라인(페이즈) 관리
+════════════════════════════════════════════ */
+
+/** 현재 메인 타임라인 (0-indexed: 0=Chapter 1, ...) */
+window.globalMainPhase = 0;
+
+/**
+ * 사이드바 타임라인 셀렉트 변경 시 호출.
+ * 관리자 전용 — 모든 클라이언트의 캐릭터 탭을 해당 챕터로 자동 전환.
+ * DB system_settings 테이블에 저장하면 새로고침 후에도 유지됨.
+ */
+window.setGlobalPhase = function (val) {
+    window.globalMainPhase = parseInt(val, 10);
+    alert('Timeline set to Chapter ' + (window.globalMainPhase + 1));
+
+    /* 현재 열려있는 캐릭터 탭이 있으면 해당 챕터로 자동 전환 */
+    var activeSection = document.querySelector('section.content-card.active');
+    if (activeSection && activeSection.id.startsWith('char-')) {
+        var phaseBtns = activeSection.querySelectorAll('.phase-tabs > .phase-btn');
+        if (phaseBtns.length > window.globalMainPhase && typeof window.changePhase === 'function')
+            window.changePhase(phaseBtns[window.globalMainPhase], window.globalMainPhase);
+    }
+};
+
+/**
+ * 전투 챕터 요청 (spar-my-phase / spar-target-phase 셀렉트 값 적용).
+ * 빈 문자열이면 globalMainPhase를 기본값으로 사용.
+ */
+window.combatRequestedPhases = { myPhase: 0, targetPhase: 0 };
+
+window.getEffectivePhase = function (specificPhaseStr) {
+    if (specificPhaseStr === '' || specificPhaseStr == null) return window.globalMainPhase;
+    return parseInt(specificPhaseStr, 10);
+};
+
+/**
+ * Arena 탭의 Challenge 버튼 클릭 처리.
+ * 각자의 챕터 선택값을 combatRequestedPhases에 저장 후 CombatSys.challenge() 호출.
+ */
+window.prepareAndChallenge = function () {
+    var myPhase     = window.getEffectivePhase(document.getElementById('spar-my-phase').value);
+    var targetPhase = window.getEffectivePhase(document.getElementById('spar-target-phase').value);
+    window.combatRequestedPhases = { myPhase: myPhase, targetPhase: targetPhase };
+    if (typeof CombatSys !== 'undefined' && typeof CombatSys.challenge === 'function')
+        CombatSys.challenge();
+    else
+        alert('Combat system not loaded.');
+};
+
+/* openTab()을 래핑하여 캐릭터 탭 진입 시
+   ① globalMainPhase 챕터로 자동 전환
+   ② 해당 캐릭터 BGM 세팅
+   (래핑은 openTab이 UI.js에서 정의된 후 200ms 폴링으로 확인) */
+var _openTabHooked   = false;
+var _bgmHookInterval = setInterval(function () {
+    if (typeof window.openTab === 'function' && !_openTabHooked) {
+        _openTabHooked = true;
+        clearInterval(_bgmHookInterval);
+
+        var _orig = window.openTab;
+        window.openTab = function (tabName, btn) {
+            _orig.apply(this, arguments);
+
+            if (tabName.startsWith('char-')) {
+                var targetPhase = window.globalMainPhase || 0;
+                /* 탭 전환 후 50ms 뒤에 챕터 버튼 클릭 (DOM 렌더링 완료 후) */
+                setTimeout(function () {
+                    var section = document.getElementById(tabName);
+                    if (section) {
+                        var phaseBtns = section.querySelectorAll('.phase-tabs > .phase-btn');
+                        if (phaseBtns.length > targetPhase && typeof window.changePhase === 'function')
+                            window.changePhase(phaseBtns[targetPhase], targetPhase);
+                    }
+                }, 50);
+
+                /* BGM 세팅: allProfiles에서 해당 챕터 프로필 조회 */
+                if (typeof allProfiles !== 'undefined') {
+                    var profile = allProfiles.find(function (p) {
+                        var pid = p.char_id.startsWith('char-') ? p.char_id : 'char-' + p.char_id;
+                        return pid === tabName && p.phase === (window.globalMainPhase || 0);
+                    });
+                    if (typeof setupCharacterBGM === 'function')
+                        setupCharacterBGM(profile ? profile.bgm_url : '');
+                }
+            } else {
+                /* 캐릭터 탭이 아니면 BGM 초기화 */
+                if (typeof setupCharacterBGM === 'function') setupCharacterBGM('');
+            }
+        };
+    }
+}, 200);
+
+/* 페이지 로드 시 DB에서 저장된 타임라인 복원 */
+window.addEventListener('load', async function () {
+    if (typeof supabaseClient === 'undefined') return;
+    var result = await supabaseClient
+        .from('system_settings').select('current_phase').eq('id', 1).single();
+    if (result.error || result.data == null) return;
+
+    setTimeout(function () {
+        if (typeof window.syncAllTabs === 'function') window.syncAllTabs(result.data.current_phase);
+        var sel = document.getElementById('global-main-phase');
+        if (sel) sel.value = result.data.current_phase;
+    }, 1000);
+});
+
+
+/* ════════════════════════════════════════════
+   Raid 전투 로그 / HP UI 헬퍼
+   Raid.js가 이 전역 함수를 호출함
+════════════════════════════════════════════ */
+
+/**
+ * 레이드 전투 로그에 메시지 추가.
+ * Raid.js 내부의 raidLog()와 달리 이 함수는
+ * 고정 DOM(#raid-combat-log)에 직접 출력.
+ * @param {string} msg   — HTML 문자열
+ * @param {string} color — CSS 색상값 (기본: #c8b880)
+ */
+window.addLog = function (msg, color) {
+    var logBox = document.getElementById('raid-combat-log');
+    if (!logBox) return;
+    var d = document.createElement('div');
+    d.style.cssText = 'color:' + (color || '#c8b880') + '; margin-bottom:3px; padding-bottom:3px;'
+        + 'border-bottom:1px solid #1a1510; font-size:0.95rem; line-height:1.6;';
+    d.innerHTML = msg;
+    logBox.appendChild(d);
+    logBox.scrollTop = logBox.scrollHeight;
+};
+
+/**
+ * 레이드 라운드 배너 업데이트.
+ * Raid.js의 syncRaidState() 후 호출되어 헤더의 라운드 텍스트를 갱신.
+ */
+window.updateRaidHPUI = function () {
+    var state = typeof window.getRaidState === 'function' ? window.getRaidState() : null;
+    if (!state) return;
+    var banner = document.getElementById('raid-round-banner');
+    if (banner && state.currentRound > 0)
+        banner.textContent = 'ROUND ' + state.currentRound;
+};
+
+
+/* ════════════════════════════════════════════
+   레이드 로비 시스템
+   (Supabase raid_rooms 테이블 기반 실시간 멀티플레이)
+
+   테이블 구조:
+     id          — uuid (PK)
+     boss_id     — 보스 식별자 (ganada / nadara / darama / ramaba)
+     status      — 'waiting' | 'active' | 'ended'
+     party       — JSONB 배열 [{charId, name, isHost}]
+     max_party   — 최대 인원 (1~4, 기본 4)
+     created_at  — 생성 시각
+     updated_at  — 갱신 시각
+════════════════════════════════════════════ */
+
+var _raidRoomId      = null;   /* 현재 참여 중인 방 ID */
+var _raidRoomChannel = null;   /* Supabase Realtime 채널 핸들 */
+var _raidIsHost      = false;  /* 방장 여부 */
+
+/* 보스 ID → 표시 이름 매핑 (Raid.js의 RAID_BOSSES와 일치해야 함)
+   ✏️ 보스를 추가·변경하면 여기도 수정하세요 */
+var BOSS_NAMES = {
+    ganada: '가나다(假那多)',
+    nadara: '나다라(那多羅)',
+    darama: '다라마(多羅馬)',
+    ramaba: '라마바(羅馬巴)',
+};
+
+/* ──────────────────────────────────────────
+   방 개설 (로그인한 누구나 가능)
+   raid-boss-select / raid-max-party 값을 읽어
+   raid_rooms 테이블에 INSERT 후 Realtime 구독 시작.
+────────────────────────────────────────── */
+window.startRaidBtnClick = async function () {
+    if (!currentUser) return alert('Login required.');
+    var myCharId = (typeof charOwners !== 'undefined' && charOwners[currentUser.email])
+        ? charOwners[currentUser.email] : null;
+    if (!myCharId) return alert('No character permission found.\n(Check charOwners in Config.js)');
+
+    var bossId     = document.getElementById('raid-boss-select').value;
+    var maxPartyEl = document.getElementById('raid-max-party');
+    var maxParty   = maxPartyEl ? (parseInt(maxPartyEl.value) || 4) : 4;
+    if (!bossId) return alert('Select a boss to challenge.');
+
+    /* 기존에 열린 방이 있으면 먼저 종료 처리 */
+    if (_raidRoomId) {
+        await supabaseClient.from('raid_rooms').update({ status: 'ended' }).eq('id', _raidRoomId);
+        _unsubscribeRaidRoom();
+        _raidRoomId = null;
+        _raidIsHost = false;
+    }
+
+    var myName = _raidGetCharName(myCharId);
+
+    /* raid_rooms INSERT */
+    var res = await supabaseClient.from('raid_rooms')
+        .insert([{
+            boss_id:   bossId,
+            status:    'waiting',
+            party:     [{ charId: myCharId, name: myName, isHost: true }],
+            max_party: maxParty,
+        }])
+        .select().single();
+
+    if (res.error) {
+        /* max_party 컬럼이 없는 경우 fallback (마이그레이션 전 환경) */
+        if (res.error.message && res.error.message.includes('max_party')) {
+            var res2 = await supabaseClient.from('raid_rooms')
+                .insert([{ boss_id: bossId, status: 'waiting',
+                           party: [{ charId: myCharId, name: myName, isHost: true }] }])
+                .select().single();
+            if (res2.error)
+                return alert('Room creation failed: ' + res2.error.message
+                    + '\n\nRun in Supabase SQL Editor:\n'
+                    + 'ALTER TABLE raid_rooms ADD COLUMN IF NOT EXISTS max_party integer DEFAULT 4;');
+            res = res2;
+        } else {
+            return alert('Room creation failed: ' + res.error.message);
+        }
+    }
+
+    _raidRoomId = res.data.id;
+    _raidIsHost = true;
+    _subscribeRaidRoom(res.data.id, maxParty);
+    _renderRaidLobby(res.data);
+};
+
+/* ──────────────────────────────────────────
+   방 참여 — 가장 최근의 waiting 방에 자동 입장
+────────────────────────────────────────── */
+window._raidJoin = async function () {
+    if (!currentUser) return alert('Login required.');
+    var myCharId = (typeof charOwners !== 'undefined' && charOwners[currentUser.email])
+        ? charOwners[currentUser.email] : null;
+    if (!myCharId) return alert('No character permission found.');
+
+    /* 최근 waiting 방 조회 */
+    var result = await supabaseClient
+        .from('raid_rooms').select('*').eq('status', 'waiting')
+        .order('created_at', { ascending: false }).limit(1);
+
+    if (result.error) return alert('Query error: ' + result.error.message);
+    if (!result.data || !result.data.length)
+        return alert('No open rooms found.\nAsk the host to open a room first.');
+
+    var room     = result.data[0];
+    var party    = Array.isArray(room.party) ? room.party : [];
+    var maxParty = room.max_party || 4;
+
+    if (party.some(function (p) { return p.charId === myCharId; }))
+        return alert('Already in this room.');
+    if (party.length >= maxParty)
+        return alert('Party is full (' + maxParty + ' max).');
+
+    party.push({ charId: myCharId, name: _raidGetCharName(myCharId), isHost: false });
+
+    var upRes = await supabaseClient.from('raid_rooms').update({ party: party }).eq('id', room.id);
+    if (upRes.error) return alert('Join failed: ' + upRes.error.message);
+
+    _raidRoomId = room.id;
+    _raidIsHost = false;
+    _subscribeRaidRoom(room.id, maxParty);
+    _renderRaidLobby(room);
+};
+
+/* ──────────────────────────────────────────
+   방 나가기 / 닫기
+   방장이 나가면 status='ended'로 방 전체 종료
+────────────────────────────────────────── */
+window._raidLeave = async function () {
+    if (!_raidRoomId || !currentUser) return;
+    var myCharId = (typeof charOwners !== 'undefined' && charOwners[currentUser.email])
+        ? charOwners[currentUser.email] : null;
+    if (!myCharId) return;
+
+    var result = await supabaseClient.from('raid_rooms').select('*').eq('id', _raidRoomId).single();
+    if (result.error || !result.data) return;
+
+    var party          = Array.isArray(result.data.party) ? result.data.party : [];
+    var isHostLeaving  = party.some(function (p) { return p.charId === myCharId && p.isHost; });
+
+    if (isHostLeaving) {
+        /* 방장 퇴장 → 방 종료 */
+        await supabaseClient.from('raid_rooms').update({ status: 'ended' }).eq('id', _raidRoomId);
+    } else {
+        /* 파티원 퇴장 → party 배열에서 제거 */
+        var newParty = party.filter(function (p) { return p.charId !== myCharId; });
+        await supabaseClient.from('raid_rooms').update({ party: newParty }).eq('id', _raidRoomId);
+    }
+
+    _unsubscribeRaidRoom();
+    _raidRoomId = null;
+    _raidIsHost = false;
+
+    var c = document.getElementById('raid-lobby-content');
+    if (c) c.innerHTML = '<div style="text-align:center; color:#666; padding:30px 0;">'
+        + (isHostLeaving ? 'Room closed.' : 'Left the room.') + '</div>';
+};
+
+/* ──────────────────────────────────────────
+   수동 시작 (방장 전용)
+   status를 'active'로 변경 → Realtime으로 모든 참여자가 감지
+────────────────────────────────────────── */
+window._raidStart = async function () {
+    if (!_raidRoomId || !_raidIsHost) return;
+
+    var upRes = await supabaseClient
+        .from('raid_rooms')
+        .update({ status: 'active' })
+        .eq('id', _raidRoomId)
+        .select().single();
+
+    if (upRes.error) { alert('Start failed: ' + upRes.error.message); return; }
+
+    /* Realtime이 지연되는 경우를 대비해 직접 처리 */
+    _handleRaidRoomUpdate(upRes.data, 4);
+};
+
+/* ──────────────────────────────────────────
+   Realtime 구독 + 폴링 fallback
+────────────────────────────────────────── */
+var _raidPollTimer = null;
+
+/**
+ * 지정 roomId의 raid_rooms 행에 Realtime 구독 시작.
+ * Realtime이 실패하면 3초마다 폴링으로 대체.
+ * @param {string} roomId
+ * @param {number} maxParty — UI 렌더링에 필요
+ */
+function _subscribeRaidRoom(roomId, maxParty) {
+    _unsubscribeRaidRoom();
+    var _maxParty = maxParty || 4;
+
+    _raidRoomChannel = supabaseClient
+        .channel('raid_room_' + roomId)
+        .on('postgres_changes', {
+            event: '*', schema: 'public', table: 'raid_rooms',
+            filter: 'id=eq.' + roomId,
+        }, function (payload) {
+            if (payload.new) _handleRaidRoomUpdate(payload.new, _maxParty);
+        })
+        .subscribe(function (status) {
+            if (status === 'SUBSCRIBED') {
+                /* Realtime 정상 → 폴링 불필요 */
+                if (_raidPollTimer) { clearInterval(_raidPollTimer); _raidPollTimer = null; }
+            } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                /* Realtime 실패 → 폴링 모드 */
+                console.warn('[Raid] Realtime failed, switching to polling mode');
+                _startRaidPolling(roomId, _maxParty);
+            }
+        });
+
+    /* 즉시 현재 상태 조회 (구독 전 상태 변화를 놓치지 않기 위해) */
+    supabaseClient.from('raid_rooms').select('*').eq('id', roomId).single()
+        .then(function (res) {
+            if (res.data) _handleRaidRoomUpdate(res.data, _maxParty);
+            /* 'active' 상태를 직후에 한 번 더 확인 (타이밍 보정) */
+            setTimeout(function () {
+                supabaseClient.from('raid_rooms').select('*').eq('id', roomId).single()
+                    .then(function (res2) {
+                        if (res2.data && res2.data.status === 'active')
+                            _handleRaidRoomUpdate(res2.data, _maxParty);
+                    });
+            }, 800);
+        });
+}
+
+/** 3초마다 DB를 직접 조회하는 폴링 fallback */
+function _startRaidPolling(roomId, maxParty) {
+    if (_raidPollTimer) clearInterval(_raidPollTimer);
+    _raidPollTimer = setInterval(async function () {
+        if (!_raidRoomId) { clearInterval(_raidPollTimer); return; }
+        var res = await supabaseClient.from('raid_rooms').select('*').eq('id', roomId).single();
+        if (res.data) _handleRaidRoomUpdate(res.data, maxParty);
+    }, 3000);
+}
+
+/**
+ * 방 상태 변경 처리 핸들러.
+ * Realtime 이벤트 또는 폴링 결과 모두 이 함수를 거침.
+ * status='active'이면 참여자 전원이 전투 모달에 입장.
+ */
+function _handleRaidRoomUpdate(room, _maxParty) {
+    var party    = Array.isArray(room.party) ? room.party : [];
+    _maxParty    = room.max_party || _maxParty;
+
+    if (room.status === 'ended') {
+        /* 방 종료 처리 */
+        _unsubscribeRaidRoom();
+        _raidRoomId = null;
+        _raidIsHost = false;
+        var c = document.getElementById('raid-lobby-content');
+        if (c) c.innerHTML = '<div style="text-align:center; color:#666; padding:30px 0;">Room ended.</div>';
+        return;
+    }
+
+    _renderRaidLobby(room);
+
+    if (room.status === 'active') {
+        var myCharId  = (typeof currentUser !== 'undefined' && currentUser &&
+                         typeof charOwners !== 'undefined')
+            ? charOwners[currentUser.email] : null;
+        var isInParty = myCharId && party.some(function (p) { return p.charId === myCharId; });
+
+        if (isInParty) {
+            /* 이미 전투 모달이 열려있으면 중복 입장 방지 */
+            var modal = document.getElementById('raid-arena-modal');
+            if (modal && modal.style.display === 'flex') return;
+
+            setTimeout(function () {
+                var members = _buildRaidPartyMembers(party, room.boss_id);
+                if (members && members.length >= 1) _openRaidArena(room.boss_id, members);
+            }, 600);
+        }
+    }
+}
+
+/** Realtime 채널 및 폴링 타이머 정리 */
+function _unsubscribeRaidRoom() {
+    if (_raidPollTimer)    { clearInterval(_raidPollTimer); _raidPollTimer = null; }
+    if (_raidRoomChannel)  { supabaseClient.removeChannel(_raidRoomChannel); _raidRoomChannel = null; }
+}
+
+/* ──────────────────────────────────────────
+   로비 UI 렌더링
+   raid-lobby-content 영역을 현재 방 상태로 갱신
+────────────────────────────────────────── */
+function _renderRaidLobby(room) {
+    var container = document.getElementById('raid-lobby-content');
+    if (!container) return;
+
+    if (!room) {
+        container.innerHTML = '<div style="text-align:center; color:#555; font-size:0.9rem; padding:30px 0;">No rooms open.</div>';
+        return;
+    }
+
+    var myCharId  = (currentUser && typeof charOwners !== 'undefined') ? charOwners[currentUser.email] : null;
+    var party     = Array.isArray(room.party) ? room.party : [];
+    var bossId    = room.boss_id   || '';
+    var status    = room.status    || 'waiting';
+    var maxParty  = room.max_party || 4;
+    var isInParty = myCharId && party.some(function (p) { return p.charId === myCharId; });
+    var isHost    = myCharId && party.some(function (p) { return p.charId === myCharId && p.isHost; });
+    var isFull    = party.length >= maxParty;
+
+    /* 파티원 목록 HTML */
+    var partyHtml = party.length === 0
+        ? '<p style="color:#555; font-size:0.85rem; text-align:center; padding:10px 0;">No party members yet.</p>'
+        : party.map(function (p) {
+            return '<div style="display:flex; align-items:center; gap:10px; background:rgba(215,179,61,0.07);'
+                + 'border:1px solid rgba(215,179,61,0.2); border-radius:6px; padding:8px 12px; margin-bottom:8px;">'
+                + '<span style="color:#d7b33d; font-weight:bold;">' + p.name + '</span>'
+                + (p.isHost
+                    ? '<span style="background:#5a1010; color:#ffb3b3; font-size:0.7rem; padding:2px 6px; border-radius:3px; margin-left:auto;">Host</span>'
+                    : '<span style="color:#666; font-size:0.75rem; margin-left:auto;">Member</span>')
+                + '</div>';
+        }).join('');
+
+    /* 액션 버튼 */
+    var actionBtn = '';
+    if (status === 'waiting') {
+        if (!myCharId) {
+            actionBtn = '<p style="color:#666; font-size:0.85rem; text-align:center; padding:10px;">Login to join.</p>';
+        } else if (isInParty && !isHost) {
+            actionBtn = '<button onclick="_raidLeave()" style="width:100%; padding:10px; background:transparent; border:1px solid #4a3a1a; color:#6a5a3a; border-radius:8px; cursor:pointer; margin-top:4px;">Leave Room</button>';
+        } else if (isHost) {
+            actionBtn = '<button onclick="_raidLeave()" style="width:100%; padding:10px; background:transparent; border:1px solid #5a2020; color:#8a5a5a; border-radius:8px; cursor:pointer; margin-top:4px;">Close Room</button>';
+        } else if (!isFull) {
+            actionBtn = '<button onclick="_raidJoin()" style="width:100%; padding:11px; background:rgba(215,179,61,0.1); border:1px solid rgba(215,179,61,0.5); color:#d7b33d; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:bold; margin-top:4px;">Join Party</button>';
+        } else {
+            actionBtn = '<p style="color:#5a3030; font-size:0.85rem; text-align:center; padding:10px;">Party is full (' + party.length + '/' + maxParty + ')</p>';
+        }
+    } else if (status === 'active') {
+        actionBtn = '<p style="color:#d7b33d; text-align:center; padding:10px; font-weight:bold;">Battle in progress...</p>';
+    }
+
+    /* 방장 수동 시작 버튼 */
+    var hostBtn = '';
+    if (_raidIsHost && status === 'waiting') {
+        hostBtn = '<button onclick="_raidStart()" style="width:100%; padding:12px; margin-top:10px;'
+            + 'background:linear-gradient(135deg,#8b0000,#5a0000); border:1px solid #c03030;'
+            + 'color:#ffb3b3; border-radius:8px; cursor:pointer; font-size:1rem; font-weight:bold; letter-spacing:2px;">'
+            + 'Start Now (Manual)</button>';
+    }
+
+    /* 인원 힌트 */
+    var autoHint = (status === 'waiting' && !isFull)
+        ? '<p style="color:#555; font-size:0.75rem; text-align:center; margin-top:6px;">'
+          + party.length + '/' + maxParty + ' — Battle starts automatically when full.</p>'
+        : '';
+
+    /* 상태 뱃지 */
+    var statusBadge = status === 'waiting'
+        ? '<span style="color:#d7b33d; font-size:0.78rem;">&#9679; Waiting (' + party.length + '/' + maxParty + ')</span>'
+        : '<span style="color:#ff4d4d; font-size:0.78rem;">&#9679; Active</span>';
+
+    container.innerHTML =
+        '<div style="background:rgba(255,77,77,0.05); border:1px solid rgba(255,77,77,0.2); border-radius:10px; padding:16px;">'
+        + '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">'
+        + '<span style="color:#ff6b6b; font-size:1rem; font-weight:bold; letter-spacing:2px;">'
+        + (BOSS_NAMES[bossId] || bossId || '—') + '</span>'
+        + statusBadge + '</div>'
+        + '<div style="margin-bottom:10px;">' + partyHtml + '</div>'
+        + actionBtn + hostBtn + autoHint + '</div>';
+}
+
+/* ──────────────────────────────────────────
+   레이드 아레나 열기
+   raid-arena-modal을 표시하고 Raid.js의 initRaid() 호출
+────────────────────────────────────────── */
+function _openRaidArena(bossId, partyMembers) {
+    var modal = document.getElementById('raid-arena-modal');
+    if (!modal || modal.style.display === 'flex') return;
+    modal.style.display = 'flex';
+
+    /* 헤더 업데이트 */
+    var nameEl   = document.getElementById('raid-boss-name-ui');
+    var bannerEl = document.getElementById('raid-round-banner');
+    if (nameEl)   nameEl.textContent   = (BOSS_NAMES[bossId] || bossId) + ' Raid';
+    if (bannerEl) bannerEl.textContent = 'Standby';
+
+    /* 로그 초기화 */
+    var logBox = document.getElementById('raid-combat-log');
+    if (logBox) logBox.innerHTML = '';
+
+    /* Raid.js 초기화 — initRaid()가 정의되어 있어야 함 */
+    if (typeof window.initRaid === 'function')
+        window.initRaid(bossId, partyMembers);
+    else
+        alert('Raid.js is not loaded.');
+}
+
+/* ──────────────────────────────────────────
+   파티원 데이터 빌드
+   allProfiles / charData에서 전투 스탯 조합
+────────────────────────────────────────── */
+function _buildRaidPartyMembers(party, bossId) {
+    var phase  = window.globalMainPhase || 0;
+    var result = [];
+
+    for (var i = 0; i < party.length; i++) {
+        var charId  = party[i].charId;
+
+        /* allProfiles에서 해당 챕터 프로필 조회 (없으면 phase 0 폴백) */
+        var profile = null;
+        if (typeof allProfiles !== 'undefined') {
+            profile = allProfiles.find(function (p) { return p.char_id === charId && p.phase === phase; });
+            if (!profile) profile = allProfiles.find(function (p) { return p.char_id === charId && p.phase === 0; });
+        }
+        if (!profile) profile = { stats: '50,50,50,50,50,50,50,50', weapon_data: null };
+
+        /* charData에서 기본 캐릭터 정보 조회 */
+        var baseChar = typeof charData !== 'undefined'
+            ? charData.find(function (c) { return 'char-' + c.id === charId; }) : null;
+
+        /* 능력치 배열 파싱 (STR, CON, SIZ, DEX, APP, POW, EDU, LCK 순서) */
+        var statsStr = profile.stats || (baseChar ? baseChar.stats : '50,50,50,50,50,50,50,50');
+        var sArr     = String(statsStr).split(',').map(Number);
+        var con      = sArr[1] || 50;
+        var siz      = sArr[2] || 50;
+        var dex      = sArr[3] || 50;
+        var pow      = sArr[6] || 50;
+
+        /* 기본 HP / MP 계산 (능력치 기반) */
+        var calcHp  = Math.max(1, Math.round((con + siz) / 10));
+        var calcMp  = Math.max(1, Math.round(pow / 5));
+
+        /* 전투 기능치 기본값 */
+        var stats = {
+            brawl:    25,
+            sword:    25,
+            bow:      25,
+            throw:    20,
+            magic:    15,
+            dodge:    Math.max(1, Math.floor(dex / 2)),
+            drive:    Math.max(1, Math.floor(dex / 5) + 20),
+            bp:       100,
+            firstaid: 35,
+            medic:    1,
+        };
+
+        /* 기본 무기 목록 (맨주먹 항상 포함) */
+        var defaultWpn = { name: 'Brawl', dmg: '1d3', type: 'brawl', desc: 'Unarmed attack' };
+        var wpns       = [defaultWpn];
+        var maxHp      = calcHp;
+        var maxMp      = calcMp;
+
+        /* weapon_data JSON 파싱 → 실제 기능치·무기 덮어쓰기 */
+        if (profile.weapon_data) {
+            try {
+                var w = typeof profile.weapon_data === 'string'
+                    ? JSON.parse(profile.weapon_data) : profile.weapon_data;
+                ['brawl','sword','bow','throw','magic','dodge','drive','bp','firstaid','medic'].forEach(function (k) {
+                    if (w[k] != null) stats[k] = parseInt(w[k]) || stats[k];
+                });
+                if (w.maxHp != null) maxHp = parseInt(w.maxHp) || calcHp;
+                if (w.maxMp != null) maxMp = parseInt(w.maxMp) || calcMp;
+                /* 장착 무기가 있으면 맨주먹 뒤에 이어붙이기 */
+                if (w.weapons && w.weapons.length > 0) wpns = [defaultWpn].concat(w.weapons);
+            } catch (e) {
+                console.warn('[Raid] weapon_data parse error', charId, e);
+            }
+        }
+
+        result.push({
+            id:     charId,
+            name:   party[i].name,
+            image:  profile.profile_image || null,
+            hp:     maxHp, maxHp: maxHp,
+            mp:     maxMp, maxMp: maxMp,
+            stats:  stats,
+            weapons: wpns,
+        });
+    }
+    return result;
+}
+
+/* ──────────────────────────────────────────
+   레이드 퇴장
+   endRaid() (Raid.js) 호출 후 모달 닫기 및 방 종료
+────────────────────────────────────────── */
+window.exitRaid = function () {
+    if (!confirm('Retreat from the raid?')) return;
+
+    if (typeof window.endRaid === 'function') window.endRaid();
+
+    /* DB 방 종료 처리 */
+    if (_raidRoomId) {
+        supabaseClient.from('raid_rooms').update({ status: 'ended' }).eq('id', _raidRoomId);
+        _unsubscribeRaidRoom();
+        _raidRoomId = null;
+        _raidIsHost = false;
+    }
+
+    /* 모달 닫기 및 로그 초기화 */
+    var modal = document.getElementById('raid-arena-modal');
+    if (modal) modal.style.display = 'none';
+    var logBox = document.getElementById('raid-combat-log');
+    if (logBox) logBox.innerHTML = '<div style="color:#3a2a0a; font-size:0.85rem;">Preparing for battle...</div>';
+};
+
+/* ──────────────────────────────────────────
+   Raid 탭 클릭 시 열린 방 자동 조회
+   _loadOpenRaidRoom() — Arena 탭의 "Raid" 버튼 onclick에서 호출
+────────────────────────────────────────── */
+window._loadOpenRaidRoom = async function () {
+    if (typeof supabaseClient === 'undefined') return;
+    if (_raidRoomId) return;  /* 이미 구독 중이면 스킵 */
+
+    var result = await supabaseClient
+        .from('raid_rooms').select('*').eq('status', 'waiting')
+        .order('created_at', { ascending: false }).limit(1);
+
+    if (result.error || !result.data || !result.data.length) {
+        var c = document.getElementById('raid-lobby-content');
+        if (c) c.innerHTML = '<div style="text-align:center; color:#555; font-size:0.9rem; padding:30px 0;">'
+            + 'No rooms open.<br>'
+            + '<span style="font-size:0.8rem; color:#444;">Open a room above, or wait for the host.</span></div>';
+        return;
+    }
+
+    var room     = result.data[0];
+    var myCharId = (currentUser && typeof charOwners !== 'undefined') ? charOwners[currentUser.email] : null;
+    var isInParty = myCharId && (room.party || []).some(function (p) { return p.charId === myCharId; });
+
+    if (isInParty) {
+        _raidRoomId = room.id;
+        _raidIsHost = (room.party || []).some(function (p) { return p.charId === myCharId && p.isHost; });
+        _subscribeRaidRoom(room.id, room.max_party || 4);
+    }
+
+    _renderRaidLobby(room);
+};
+
+/* ──────────────────────────────────────────
+   유틸 함수
+────────────────────────────────────────── */
+
+/**
+ * charId로 캐릭터 표시 이름을 반환.
+ * Config.js의 charData 배열에서 조회.
+ */
+function _raidGetCharName(charId) {
+    var base = typeof charData !== 'undefined'
+        ? charData.find(function (c) { return 'char-' + c.id === charId; }) : null;
+    return base ? base.name : charId;
+}
+
 </script>
 
 </body>
