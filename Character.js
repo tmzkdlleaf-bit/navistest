@@ -904,36 +904,38 @@ function _renderAllSlides(charId, profile, tab) {
 }
 
 function _renderInvIntoContainer(container, profile, tab) {
-    // 툴팁용 흑백 테마 CSS 동적 주입
     if (!document.getElementById('inv-preview-tooltip-style')) {
-        document.head.insertAdjacentHTML('beforeend', `
-            <style id="inv-preview-tooltip-style">
-                .inv-slot-hover { position: relative; overflow: visible !important; }
-                .inv-tooltip-pretty {
-                    position: absolute; bottom: 115%; left: 50%;
-                    transform: translateX(-50%) translateY(5px);
-                    background: linear-gradient(180deg, rgba(40,40,40,0.98) 0%, rgba(20,20,20,0.98) 100%);
-                    border: 1px solid #aaaaaa; padding: 10px 14px; border-radius: 8px;
-                    width: max-content; max-width: 220px; z-index: 99999;
-                    opacity: 0; visibility: hidden; pointer-events: none;
-                    box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 0 8px rgba(255,255,255,0.1);
-                    transition: opacity 0.05s ease-out, transform 0.05s ease-out;
-                    text-align: left; line-height: 1.4;
-                }
-                .inv-tooltip-pretty::after {
-                    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-                    border-width: 6px; border-style: solid; border-color: #aaaaaa transparent transparent transparent;
-                }
-                .inv-slot-hover:hover .inv-tooltip-pretty {
-                    opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
-                }
-                .tooltip-title {
-                    color: #ffffff; display: block; margin-bottom: 6px; font-size: 0.95rem;
-                    font-weight: 700; border-bottom: 1px dashed rgba(255,255,255,0.4); padding-bottom: 4px; text-shadow: 0 1px 2px #000;
-                }
-                .tooltip-desc { color: #cccccc; font-size: 0.8rem; white-space: pre-wrap; word-break: break-word; }
-            </style>
-        `);
+        var style = document.createElement('style');
+        style.id = 'inv-preview-tooltip-style';
+        style.textContent = [
+            '.inv-slot-hover { position: relative; overflow: visible !important; }',
+            '.inv-tooltip-pretty {',
+            '    position: absolute; bottom: 115%; left: 50%;',
+            '    transform: translateX(-50%) translateY(5px);',
+            '    background: linear-gradient(180deg, rgba(40,40,40,0.98) 0%, rgba(20,20,20,0.98) 100%);',
+            '    border: 1px solid #aaaaaa; padding: 10px 14px; border-radius: 8px;',
+            '    width: max-content; max-width: 220px; z-index: 99999;',
+            '    opacity: 0; visibility: hidden; pointer-events: none;',
+            '    box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 0 8px rgba(255,255,255,0.1);',
+            '    transition: opacity 0.05s ease-out, transform 0.05s ease-out;',
+            '    text-align: left; line-height: 1.4;',
+            '}',
+            '.inv-tooltip-pretty::after {',
+            '    content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);',
+            '    border-width: 6px; border-style: solid;',
+            '    border-color: #aaaaaa transparent transparent transparent;',
+            '}',
+            '.inv-slot-hover:hover .inv-tooltip-pretty {',
+            '    opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);',
+            '}',
+            '.tooltip-title {',
+            '    color: #ffffff; display: block; margin-bottom: 6px; font-size: 0.95rem;',
+            '    font-weight: 700; border-bottom: 1px dashed rgba(255,255,255,0.4);',
+            '    padding-bottom: 4px; text-shadow: 0 1px 2px #000;',
+            '}',
+            '.tooltip-desc { color: #cccccc; font-size: 0.8rem; white-space: pre-wrap; word-break: break-word; }'
+        ].join('\n');
+        document.head.appendChild(style);
     }
 
     var rawSrc = (tab === 'furniture') ? profile.furniture_inventory : profile.inventory;
@@ -943,40 +945,36 @@ function _renderInvIntoContainer(container, profile, tab) {
     } else if (Array.isArray(rawSrc)) {
         myInv = rawSrc.slice();
     }
-    
-    // [수정 2] 빈 슬롯을 날려버리는 .filter() 로직을 삭제하여 20칸 레이아웃을 보존합니다.
 
     var html = '';
     for (var i = 0; i < 20; i++) {
         var item  = myInv[i];
-        var name  = '', img = '', count = 1, desc = ''; 
-        
+        var name  = '', img = '', count = 1, desc = '';
+
         if (item && typeof item === 'object' && item.name) {
             name = item.name; img = item.img || ''; count = parseInt(item.count, 10) || 1; desc = item.desc || '';
         } else if (typeof item === 'string' && item.trim() && item.indexOf('[object') === -1) {
             var pts = item.split(':');
-            name = pts[0] || '?';
-            desc = pts[1] || ''; 
-            img  = pts.length > 2 ? pts.slice(2).join(':') : '';
+            name  = pts[0] || '?';
+            desc  = pts[1] || '';
+            img   = pts.length > 2 ? pts.slice(2).join(':') : '';
             count = 1;
         }
-        
+
         if (name) {
             var badge = count > 1
                 ? '<div style="position:absolute;top:2px;right:2px;background:#aaaaaa;color:#000;font-size:10px;font-weight:bold;padding:2px 4px;border-radius:4px;z-index:5;">x' + count + '</div>'
                 : '';
-            var imgSrc = img || 'https://placehold.co/100?text=Empty';
-            
+            var imgSrc   = img || 'https://placehold.co/100?text=Empty';
             var safeDesc = desc ? desc.replace(/"/g, '&quot;') : 'No description available.';
-            var tooltipHTML = '<div class="inv-tooltip-pretty">' 
-                            + '<span class="tooltip-title">[' + name + ']</span>' 
-                            + '<span class="tooltip-desc">' + safeDesc + '</span>' 
+            var tooltipHTML = '<div class="inv-tooltip-pretty">'
+                            + '<span class="tooltip-title">[' + name + ']</span>'
+                            + '<span class="tooltip-desc">' + safeDesc + '</span>'
                             + '</div>';
-            
+
             html +=
                 '<div class="inv-slot inv-slot-hover" style="position:relative;background:#222;border:1px solid rgba(255,255,255,0.1);aspect-ratio:1;">' +
-                tooltipHTML +
-                badge +
+                tooltipHTML + badge +
                 '<img src="' + imgSrc + '" onerror="this.src=\'https://placehold.co/100?text=Error\'" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1;">' +
                 '<div style="position:absolute;bottom:0;left:0;width:100%;background:rgba(0,0,0,0.7);font-size:10px;color:#ffffff;text-align:center;padding:2px 0;z-index:3;">' + name + '</div>' +
                 '</div>';
