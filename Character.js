@@ -987,6 +987,7 @@ function _renderInvIntoContainer(container, profile, tab) {
     container.innerHTML = html;
 }
 
+// ─── 수정 후 ───
 function _ensureInvPreviewTabs(charId) {
     var section = document.getElementById(charId); if (!section) return;
     var slides  = section.querySelectorAll('.phase-slide');
@@ -995,10 +996,10 @@ function _ensureInvPreviewTabs(charId) {
     slides.forEach(function (slide) {
         var slot = slide.querySelector('.inv-tab-slot');
         if (!slot) return;
-        if (slot.querySelector('.inv-preview-tab-btn')) return; 
+        if (slot.querySelector('.inv-preview-tab-btn')) return;
 
         var gActive = (tab === 'general');
-        var btnBase = 'flex:1; padding:6px 0; font-size:0.75rem; font-family:\\'Nanum Myeongjo\\', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;';
+        var btnBase = "flex:1; padding:6px 0; font-size:0.75rem; font-family:'Nanum Myeongjo', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;";
         
         var btnG = btnBase + (gActive
             ? 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);'
@@ -1010,10 +1011,10 @@ function _ensureInvPreviewTabs(charId) {
 
         slot.innerHTML =
             '<button class="inv-preview-tab-btn" data-tab="general"' +
-            ' onclick="switchInvPreviewTab(\\'' + charId + '\\',\\'general\\')"' +
+            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'general\')"' +
             ' style="' + btnG + '">Items</button>' +
             '<button class="inv-preview-tab-btn" data-tab="furniture"' +
-            ' onclick="switchInvPreviewTab(\\'' + charId + '\\',\\'furniture\\')"' +
+            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'furniture\')"' +
             ' style="' + btnF + '">Storage</button>';
     });
 }
