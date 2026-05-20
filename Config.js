@@ -63,11 +63,11 @@ const adminEmails = ['admin@example.com'];
    사용자가 로그인하면 자신의 캐릭터를 편집할 수 있게 됩니다.
 ───────────────────────────────────────────────────────────────── */
 const charOwners = {
-    'player1@example.com': 'char-가나',   /* 플레이어 1 → 캐릭터 가나 */
-    'player2@example.com': 'char-다라',   /* 플레이어 2 → 캐릭터 다라 */
-    'player3@example.com': 'char-마바',   /* 플레이어 3 → 캐릭터 마바 */
-    'player4@example.com': 'char-사아',   /* 플레이어 4 → 캐릭터 사아 */
-    'admin@example.com':   'char-가나',   /* 관리자도 캐릭터를 가질 수 있습니다 */
+    'player1@example.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
+    'player2@example.com': 'char-p2',   /* 플레이어 2 → 캐릭터 다라 */
+    'player3@example.com': 'char-p3',   /* 플레이어 3 → 캐릭터 마바 */
+    'player4@example.com': 'char-p4',   /* 플레이어 4 → 캐릭터 사아 */
+    'admin@example.com':   'char-p5',   /* 관리자도 캐릭터를 가질 수 있습니다 */
 };
 
 
@@ -84,7 +84,7 @@ const charOwners = {
 ───────────────────────────────────────────────────────────────── */
 const charData = [
     {
-        id: '가나',
+        id: 'p1',
         name: '가나다',
         title: 'A그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=가나다',
@@ -93,7 +93,7 @@ const charData = [
         color: '200, 200, 200',             /* 흰색 계열 테마 */
     },
     {
-        id: '다라',
+        id: 'p2',
         name: '다라마',
         title: 'A그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=다라마',
@@ -102,7 +102,7 @@ const charData = [
         color: '180, 180, 180',
     },
     {
-        id: '마바',
+        id: 'p3',
         name: '마바사',
         title: 'B그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=마바사',
@@ -111,7 +111,7 @@ const charData = [
         color: '160, 160, 160',
     },
     {
-        id: '사아',
+        id: 'p4',
         name: '사아자',
         title: 'B그룹',
         img: 'https://placehold.co/300x400/1a1a1a/888888?text=사아자',
