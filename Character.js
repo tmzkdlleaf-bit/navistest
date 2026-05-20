@@ -13,7 +13,6 @@
 // 1. 캐릭터 페이지 HTML 자동 생성 (그리드 레이아웃 및 흑백 스타일 적용)
 // ─────────────────────────────────────────────────────────────────
 function initCharacterPages() {
-    // 레이아웃 구성을 위한 기본 CSS 삽입
     var html = '<style>.stats-wrapper > *:not(.weapon-section):not(.inventory-section) { grid-column: 1; grid-row: 1; justify-self: center; align-self: center; margin-top:10px; }</style>';
     
     charData.forEach(function (c) {
@@ -25,7 +24,6 @@ function initCharacterPages() {
                         '<h2>' + c.title + ' · ' + c.name + '</h2>' +
                         '<a href="#" class="link-btn">Character Sheet</a>' +
                     '</div>' +
-                    
                     '<div class="profile-overview">' +
                         '<img src="' + c.img + '" class="main-profile-img" onclick="openLightbox(this.src)">' +
                         '<div class="profile-info-wrapper">' +
@@ -44,11 +42,7 @@ function initCharacterPages() {
                         '</div>' +
                     '</div>' +
                     '<div class="divider-dots">• • •</div>' +
-                    
-                    // 능력치, 무기, 인벤토리 그리드 래퍼
                     '<div class="stats-wrapper" data-stats="' + c.stats + '" data-color="170,170,170" style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap:10px 40px; align-items:start; justify-items:center;">' +
-                        
-                        // 1. 우측 상단: 무기 영역
                         '<div class="weapon-section" style="grid-column: 2; grid-row: 1; width:100%; justify-self:stretch;">' +
                             '<div class="weapon-display-wrapper" data-weapon="{}">' +
                                 '<div class="inv-header-wrapper" style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">' +
@@ -60,8 +54,6 @@ function initCharacterPages() {
                                 '</div>' +
                             '</div>' +
                         '</div>' +
-                        
-                        // 2. 하단 전체: 인벤토리 영역
                         '<div class="inventory-section" style="grid-column: 1 / -1; grid-row: 2; width:100%; justify-self:stretch; margin-top:25px;">' +
                             '<div class="inv-header-inventory" style="margin-bottom:15px;">' +
                                 '<div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px;">' +
@@ -72,7 +64,6 @@ function initCharacterPages() {
                             '</div>' +
                             '<div class="rpg-inventory"></div>' +
                         '</div>' +
-                        
                     '</div>' +
                     '<div class="divider-dots">• • •</div>' +
                     '<h2>Backstory</h2>' +
@@ -97,7 +88,6 @@ function initCharacterPages() {
     if (typeof drawAllRadarCharts === 'function') drawAllRadarCharts();
 }
 
-// 인벤토리 초기 빈 슬롯(20칸) 렌더링
 function initDefaultInventories() {
     document.querySelectorAll('.rpg-inventory').forEach(function (inv) {
         while (inv.querySelectorAll('.inv-slot').length < 20) {
@@ -130,7 +120,6 @@ window.openGeneralModal = function (charId, phaseIndex) {
     var currentRgb = targetSlide.querySelector('.stats-wrapper').getAttribute('data-color') || '170, 170, 170';
     document.getElementById('edit-theme-color').value = rgbToHex(currentRgb);
 
-    // 데이터베이스에서 해당 캐릭터/페이즈의 BGM URL을 불러와 인풋에 설정
     var profile = (typeof allProfiles !== 'undefined')
         ? allProfiles.find(function (p) { return p.char_id === charId && p.phase === phaseIndex; })
         : null;
@@ -149,7 +138,6 @@ window.saveGeneralData = async function () {
     var finalImg  = document.getElementById('current-profile-img').value;
     var fileInput = document.getElementById('edit-profile-file');
     
-    // 외부 이미지 호스팅 전송 처리
     if (fileInput.files.length > 0) {
         btn.innerText = 'Uploading...';
         var uploadedUrl = await uploadToImgbb(fileInput.files[0]);
@@ -221,8 +209,6 @@ window.saveStatsToDB = async function () {
 // ─────────────────────────────────────────────────────────────────
 // 4. 무기 및 전투 스탯 관리 (HP/MP 자동 계산 포함)
 // ─────────────────────────────────────────────────────────────────
-
-// 능력치 배열에서 계산 공식을 적용하여 HP 및 MP를 도출합니다.
 function calcHpMpFromStats(statsStr) {
     var sArr = (statsStr || '').split(',').map(Number);
     var con  = sArr[1] || 0;
@@ -237,7 +223,6 @@ function calcHpMpFromStats(statsStr) {
     if (hpEl) hpEl.textContent = hp !== null ? hp : '—';
     if (mpEl) mpEl.textContent = mp !== null ? mp : '—';
 
-    // 저장 연동을 위해 임시 hidden 엘리먼트에 값 할당
     if (!document.getElementById('_raid-hp-cache')) {
         var hid1 = document.createElement('input');
         hid1.type = 'hidden'; hid1.id = '_raid-hp-cache';
@@ -276,7 +261,6 @@ window.openWeaponModal = async function(charId, phaseIndex) {
     });
     document.getElementById('weapon-list-container').innerHTML = '';
 
-    // 입력값이 없을 때 제안할 기본 HP/MP를 위한 선행 계산
     var statsStr = (res.data && res.data.stats) ? res.data.stats : null;
     if (!statsStr) {
         var base = charData.find(function(c) { return 'char-' + c.id === charId; });
@@ -343,7 +327,7 @@ window.addWeaponRow = function(name, dmg, type, desc) {
     row.style.cssText = [
         'display:flex', 'gap:6px', 'align-items:center',
         'background:rgba(255,255,255,0.05)', 'border:1px solid rgba(255,255,255,0.1)',
-        'border-radius:8px', 'padding:8px 10px', 'margin-bottom:6px',
+        'border-radius:8px', 'padding:8px 10px', 'margin-bottom:6px'
     ].join(';');
 
     row.innerHTML =
@@ -806,21 +790,16 @@ window.openMoneyModal = function (charId, phaseIndex) {
 
 window.processMoney = async function (type) {
     var amtInput = document.getElementById('money-amount');
-    
-    // 콤마 파싱으로 인한 숫자형 변환 오류 방지
     var amount = parseInt(amtInput.value.replace(/,/g, ''), 10);
     if (!amount || amount <= 0) return alert('금액을 정확히 입력해주세요.');
     if (!currentUser) return alert('로그인이 필요합니다.');
 
     var myCharId = charOwners[currentUser.email];
-    
-    // 타인의 데이터를 수정하지 못하도록 확실한 검증 절차
     if (currentEditingId !== myCharId) {
         return alert('본인 캐릭터의 소지금만 수정할 수 있습니다.');
     }
 
     try {
-        // 동시 편집 충돌 방지를 위한 최신 데이터베이스 조회
         var res = await supabaseClient
             .from('character_profiles').select('money')
             .eq('char_id', currentEditingId)
@@ -848,10 +827,8 @@ window.processMoney = async function (type) {
         } else {
             alert('' + amount.toLocaleString() + ' G 정상 처리 되었습니다.');
             currentMoney = newMoney;
-            
             document.getElementById('current-money-display').innerText = newMoney.toLocaleString() + ' G';
             amtInput.value = '';
-            
             if (typeof loadCharacterData === 'function') loadCharacterData();
             closeModal('money-modal');
         }
@@ -862,7 +839,7 @@ window.processMoney = async function (type) {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// 8. 인벤토리 미리보기 자동 동기화 (소지품/보관함 탭 전환 오류 수정판)
+// 8. 인벤토리 미리보기 자동 동기화
 // ─────────────────────────────────────────────────────────────────
 var _previewTabState = {}; 
 
@@ -870,24 +847,22 @@ window.switchInvPreviewTab = function (charId, tab) {
     _previewTabState[charId] = tab;
     var section = document.getElementById(charId); if (!section) return;
     
-    // 버튼 스타일 하이라이트
     section.querySelectorAll('.inv-preview-tab-btn').forEach(function (btn) {
         var isActive = btn.getAttribute('data-tab') === tab;
-        btn.style.background  = isActive ? 'rgba(200,200,200,0.25)' : 'rgba(0,0,0,0.3)';
-        btn.style.color       = isActive ? '#ffffff' : '#777777';
-        btn.style.fontWeight  = isActive ? '600' : '400';
+        btn.style.background = isActive ? 'rgba(200,200,200,0.25)' : 'rgba(0,0,0,0.3)';
+        btn.style.color      = isActive ? '#ffffff' : '#777777';
+        btn.style.fontWeight = isActive ? '600' : '400';
     });
     
     if (typeof allProfiles === 'undefined') return;
     
-    // [수정 1] 1부(0)로 고정하지 않고, 현재 활성화된 페이즈의 프로필을 유동적으로 검색
     var currentPhase = window.globalMainPhase || 0;
     var activeProfile = allProfiles.find(function (p) {
         var pid = p.char_id.startsWith('char-') ? p.char_id : 'char-' + p.char_id;
         return pid === charId && p.phase === currentPhase;
     }) || allProfiles.find(function (p) {
         var pid = p.char_id.startsWith('char-') ? p.char_id : 'char-' + p.char_id;
-        return pid === charId; // 현재 챕터 데이터가 없으면 존재하는 아무 챕터로 폴백
+        return pid === charId;
     });
 
     if (activeProfile) _renderAllSlides(charId, activeProfile, tab);
@@ -985,35 +960,37 @@ function _renderInvIntoContainer(container, profile, tab) {
     container.innerHTML = html;
 }
 
-// ─── 수정 후 ───
 function _ensureInvPreviewTabs(charId) {
     var section = document.getElementById(charId); if (!section) return;
     var slides  = section.querySelectorAll('.phase-slide');
     var tab     = _previewTabState[charId] || 'general';
-    
+
     slides.forEach(function (slide) {
         var slot = slide.querySelector('.inv-tab-slot');
         if (!slot) return;
         if (slot.querySelector('.inv-preview-tab-btn')) return;
 
-        var gActive = (tab === 'general');
-        var btnBase = "flex:1; padding:6px 0; font-size:0.75rem; font-family:'Nanum Myeongjo', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;";
-        
-        var btnG = btnBase + (gActive
-            ? 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);'
-            : 'background:transparent; color:#888; font-weight:400;');
-            
-        var btnF = btnBase + (!gActive
-            ? 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);'
-            : 'background:transparent; color:#888; font-weight:400;');
+        var gActive      = (tab === 'general');
+        var activeStyle  = 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);';
+        var inactiveStyle = 'background:transparent; color:#888; font-weight:400;';
+        var baseStyle    = "flex:1; padding:6px 0; font-size:0.75rem; font-family:'Nanum Myeongjo', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;";
 
-        slot.innerHTML =
-            '<button class="inv-preview-tab-btn" data-tab="general"' +
-            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'general\')"' +
-            ' style="' + btnG + '">Items</button>' +
-            '<button class="inv-preview-tab-btn" data-tab="furniture"' +
-            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'furniture\')"' +
-            ' style="' + btnF + '">Storage</button>';
+        var btnItems = document.createElement('button');
+        btnItems.className = 'inv-preview-tab-btn';
+        btnItems.setAttribute('data-tab', 'general');
+        btnItems.setAttribute('style', baseStyle + (gActive ? activeStyle : inactiveStyle));
+        btnItems.textContent = 'Items';
+        btnItems.onclick = function () { switchInvPreviewTab(charId, 'general'); };
+
+        var btnFurn = document.createElement('button');
+        btnFurn.className = 'inv-preview-tab-btn';
+        btnFurn.setAttribute('data-tab', 'furniture');
+        btnFurn.setAttribute('style', baseStyle + (!gActive ? activeStyle : inactiveStyle));
+        btnFurn.textContent = 'Storage';
+        btnFurn.onclick = function () { switchInvPreviewTab(charId, 'furniture'); };
+
+        slot.appendChild(btnItems);
+        slot.appendChild(btnFurn);
     });
 }
 
@@ -1025,8 +1002,6 @@ window.refreshInventoryPreviews = function () {
 
     allProfiles.forEach(function (profile) {
         var charId = profile.char_id.startsWith('char-') ? profile.char_id : 'char-' + profile.char_id;
-        
-        // [수정 3] 무조건 1부만 렌더링하던 것을 현재 접속 중인 챕터 기준으로 변경
         if (profile.phase !== currentPhase) return; 
         if (seen[charId]) return;
         seen[charId] = true;
@@ -1062,13 +1037,11 @@ var _bgmHookInterval = setInterval(function () {
         
         var _originalOpenTab = window.openTab;
         window.openTab = function (tabName, btn) {
-            // 탭 변경 이벤트 전개
             _originalOpenTab.apply(this, arguments);
             
             if (tabName.startsWith('char-')) {
                 var targetPhase = window.globalMainPhase || 0; 
                 
-                // 프론트 단 타이밍 버그 방지를 위한 짧은 지연 처리
                 setTimeout(function() {
                     var section = document.getElementById(tabName);
                     if (section) {
@@ -1101,7 +1074,6 @@ var _bgmHookInterval = setInterval(function () {
     }
 }, 200);
 
-// 전역 기준 페이즈 동기화
 window.setGlobalPhase = function(val) {
     window.globalMainPhase = parseInt(val, 10);
     alert('기준 챕터가 Chapter ' + (window.globalMainPhase + 1) + '으로 변경되었습니다.');
