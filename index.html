@@ -1510,7 +1510,7 @@ window.addEventListener('load', function () {
     if (loginNav)  loginNav.addEventListener('click',  function () { if (typeof openAuthModal  === 'function') openAuthModal(); });
     if (logoutNav) logoutNav.addEventListener('click', function () { if (typeof signOut        === 'function') signOut(); });
 
-    /* ── 시스템 초기화 순서 ──
+/* ── 시스템 초기화 순서 ──
        loadTheme              — 저장된 라이트/다크 테마 복원
        initCharacterPages     — Config.js의 charData 배열로 캐릭터 탭 DOM 생성
        initDefaultInventories — 캐릭터별 인벤토리 초기 슬롯 설정
@@ -1519,7 +1519,7 @@ window.addEventListener('load', function () {
        renderShop             — 상점 상품 목록 렌더링
        buildCalendar          — 사이드바 달력 렌더링
        createDust             — 배경 파티클 애니메이션 생성
-       updateHomeSlider       — 홈 슬라이더 초기 위치 설정              -->
+       updateHomeSlider       — 홈 슬라이더 초기 위치 설정              */
     if (typeof loadTheme              === 'function') loadTheme();
     if (typeof initCharacterPages     === 'function') initCharacterPages();
     if (typeof initDefaultInventories === 'function') initDefaultInventories();
