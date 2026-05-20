@@ -2,7 +2,7 @@
 /* UI.js — 사용자 인터페이스 헬퍼 함수 모음 (통합 및 최적화 버전)     */
 /* */
 /* 이 파일이 담당하는 일:                                             */
-/* 1. 네비게이션 및 챕터 탭 전환 (openTab, changePhase 안전 버전)     */
+/* 1. 네비게이션 및 챕터 탭 전환 (openTab, changePhase 안전 유연 버전) */
 /* 2. 홈 이미지 슬라이더 제어                                         */
 /* 3. 시스템 모달 및 이미지 라이트박스 제어                            */
 /* 4. 라이트/다크 테마 토글 및 data-theme 속성 연동                    */
@@ -18,7 +18,8 @@
 /**
  * 상단 네비게이션 탭을 전환합니다.
  * 해당하는 .content-card 섹션을 활성화하고 나머지는 비활성화합니다.
- * * 매개변수:
+ *
+ * 매개변수:
  * id  : 표시할 섹션의 id 속성값 (예: 'home', 'Gallery', 'char-p1')
  * btn : 클릭된 .nav-btn 요소
  */
@@ -106,7 +107,9 @@ window.openTab = function (id, btn) {
 
 /**
  * 콘텐츠 카드 내부의 챕터(Phase) 서브 탭을 전환합니다.
- * * 매개변수:
+ * (수정 완료: 슬라이드 구조가 없는 갤러리 섹션에서도 정상 호환됩니다)
+ *
+ * 매개변수:
  * btn : 클릭된 .phase-btn 요소
  * idx : 보여줄 슬라이드 인덱스 (0=Chapter 1, 1=Chapter 2, ...)
  */
@@ -119,29 +122,36 @@ window.changePhase = function (btn, idx) {
     const btns = section.querySelectorAll('.phase-btn');
     const slides = section.querySelectorAll('.phase-slide');
 
-    /* ★ 에러 방지 안전장치: 인덱스가 범위를 벗어나거나 요소가 없으면 조기 종료 */
-    if (!btns[idx] || !slides[idx]) {
-        console.warn(`changePhase: 인덱스 ${idx} 에 해당하는 페이즈 팩터가 누락되었습니다.`);
+    /* 버튼 안전장치: 해당 인덱스에 버튼이 없으면 종료 */
+    if (!btns[idx]) {
+        console.warn(`changePhase: 인덱스 ${idx} 에 해당하는 버튼이 존재하지 않습니다.`);
         return;
     }
 
-    /* 서브 탭 버튼 및 슬라이드 활성화 상태 변경 */
+    /* 모든 탭 버튼에서 활성화 클래스 제거 후 선택된 버튼만 강조 */
     btns.forEach(t => t.classList.remove('active'));
-    slides.forEach(s => s.classList.remove('active'));
-    
     btns[idx].classList.add('active');
-    slides[idx].classList.add('active');
 
-    /* 전역 편집 대상 페이즈 포인터 갱신 */
+    /* 슬라이드 구조(.phase-slide)가 실제로 존재하는 구역(Records, NPC 등)에서만 내부 컨텐츠 전환 */
+    if (slides.length > 0) {
+        if (slides[idx]) {
+            slides.forEach(s => s.classList.remove('active'));
+            slides[idx].classList.add('active');
+
+            /* 활성화된 슬라이드 내부의 능력치 거미줄 차트 레이아웃 재연산 */
+            const activeSlide = slides[idx];
+            setTimeout(() => {
+                if (typeof drawAllRadarCharts === 'function') drawAllRadarCharts(activeSlide);
+            }, 50);
+        } else {
+            console.warn(`changePhase: 인덱스 ${idx} 에 해당하는 슬라이드가 존재하지 않습니다.`);
+        }
+    }
+
+    /* 전역 편집 대상 페이즈 포인터 핵심 갱신 */
     currentEditingPhase = idx;
 
-    /* 변경된 페이즈 내부의 능력치 차트 레이아웃 재연산 */
-    const activeSlide = slides[idx];
-    setTimeout(() => {
-        if (typeof drawAllRadarCharts === 'function') drawAllRadarCharts(activeSlide);
-    }, 50);
-
-    /* 갤러리 카드 챕터 갱신 시 피드 데이터 리로드 */
+    /* 갤러리 섹션 변경 시 바뀐 페이즈 값을 기준으로 피드 데이터 리로드 */
     if (section.id === 'Gallery' && typeof loadGalleryData === 'function') {
         loadGalleryData(1);
     }
@@ -220,7 +230,6 @@ window.toggleTheme = function () {
     const icon = document.getElementById('theme-icon');
     const isLight = body.classList.toggle('light-mode');
     
-    /* 흑백 스타일 제어용 속성 바인딩 */
     body.setAttribute('data-theme', isLight ? 'light' : 'dark');
 
     try {
@@ -285,7 +294,6 @@ function createDust() {
 ───────────────────────────────────────────────────────────────── */
 
 function buildRelationBadges() {
-    /* 흑백 모노톤 기반 정렬 스타일 매핑 스펙트럼 */
     const colorMap = {
         '적':     { bg: '#222222', text: '#ffffff' },
         '아군':   { bg: '#ffffff', text: '#000000' },
@@ -329,7 +337,6 @@ function buildRelationBadges() {
 ───────────────────────────────────────────────────────────────── */
 
 function parseAllLogs() {
-    /* 무관한 범용 더미 데이터 이름 레이블 유지 (그레이스케일 매핑) */
     const charColors = {
         '가나다':  '#ffffff', 
         '다라마':  '#dddddd', 
@@ -354,7 +361,7 @@ function parseAllLogs() {
 
             html += `
                 <div class="log-item" style="margin-bottom:8px; line-height:1.6;">
-                    <b class="log-name" style="color:${color}; margin-right:8px;">${charName}</b>
+                    <b class="log-name" style="color:' + color + '; margin-right:8px;">${charName}</b>
                     <span class="msg-text" style="color:#cccccc;">${message}</span>
                 </div>`;
         }
