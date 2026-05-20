@@ -862,34 +862,44 @@ window.processMoney = async function (type) {
 };
 
 // ─────────────────────────────────────────────────────────────────
-// 8. 인벤토리 미리보기 툴팁 디자인 (CSS 삽입 및 렌더링)
+// 8. 인벤토리 미리보기 자동 동기화 (소지품/보관함 탭 전환 오류 수정판)
 // ─────────────────────────────────────────────────────────────────
 var _previewTabState = {}; 
 
 window.switchInvPreviewTab = function (charId, tab) {
     _previewTabState[charId] = tab;
     var section = document.getElementById(charId); if (!section) return;
+    
+    // 버튼 스타일 하이라이트
     section.querySelectorAll('.inv-preview-tab-btn').forEach(function (btn) {
         var isActive = btn.getAttribute('data-tab') === tab;
         btn.style.background  = isActive ? 'rgba(200,200,200,0.25)' : 'rgba(0,0,0,0.3)';
         btn.style.color       = isActive ? '#ffffff' : '#777777';
         btn.style.fontWeight  = isActive ? '600' : '400';
     });
+    
     if (typeof allProfiles === 'undefined') return;
-    var p0 = allProfiles.find(function (p) {
+    
+    // [수정 1] 1부(0)로 고정하지 않고, 현재 활성화된 페이즈의 프로필을 유동적으로 검색
+    var currentPhase = window.globalMainPhase || 0;
+    var activeProfile = allProfiles.find(function (p) {
         var pid = p.char_id.startsWith('char-') ? p.char_id : 'char-' + p.char_id;
-        return pid === charId && p.phase === 0;
+        return pid === charId && p.phase === currentPhase;
+    }) || allProfiles.find(function (p) {
+        var pid = p.char_id.startsWith('char-') ? p.char_id : 'char-' + p.char_id;
+        return pid === charId; // 현재 챕터 데이터가 없으면 존재하는 아무 챕터로 폴백
     });
-    if (p0) _renderAllSlides(charId, p0, tab);
+
+    if (activeProfile) _renderAllSlides(charId, activeProfile, tab);
 };
 
-function _renderAllSlides(charId, p0Profile, tab) {
+function _renderAllSlides(charId, profile, tab) {
     var section = document.getElementById(charId); if (!section) return;
     var slides  = section.querySelectorAll('.phase-slide');
     slides.forEach(function (slide) {
         var invContainer = slide.querySelector('.rpg-inventory');
         if (!invContainer) return;
-        _renderInvIntoContainer(invContainer, p0Profile, tab);
+        _renderInvIntoContainer(invContainer, profile, tab);
     });
 }
 
@@ -900,49 +910,26 @@ function _renderInvIntoContainer(container, profile, tab) {
             <style id="inv-preview-tooltip-style">
                 .inv-slot-hover { position: relative; overflow: visible !important; }
                 .inv-tooltip-pretty {
-                    position: absolute;
-                    bottom: 115%; 
-                    left: 50%;
+                    position: absolute; bottom: 115%; left: 50%;
                     transform: translateX(-50%) translateY(5px);
                     background: linear-gradient(180deg, rgba(40,40,40,0.98) 0%, rgba(20,20,20,0.98) 100%);
-                    border: 1px solid #aaaaaa;
-                    padding: 10px 14px;
-                    border-radius: 8px;
-                    width: max-content;
-                    max-width: 220px;
-                    z-index: 99999;
-                    opacity: 0;
-                    visibility: hidden;
-                    pointer-events: none;
+                    border: 1px solid #aaaaaa; padding: 10px 14px; border-radius: 8px;
+                    width: max-content; max-width: 220px; z-index: 99999;
+                    opacity: 0; visibility: hidden; pointer-events: none;
                     box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 0 8px rgba(255,255,255,0.1);
                     transition: opacity 0.05s ease-out, transform 0.05s ease-out;
-                    text-align: left;
-                    line-height: 1.4;
+                    text-align: left; line-height: 1.4;
                 }
                 .inv-tooltip-pretty::after {
-                    content: '';
-                    position: absolute;
-                    top: 100%;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    border-width: 6px;
-                    border-style: solid;
-                    border-color: #aaaaaa transparent transparent transparent;
+                    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+                    border-width: 6px; border-style: solid; border-color: #aaaaaa transparent transparent transparent;
                 }
                 .inv-slot-hover:hover .inv-tooltip-pretty {
-                    opacity: 1;
-                    visibility: visible;
-                    transform: translateX(-50%) translateY(0);
+                    opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
                 }
                 .tooltip-title {
-                    color: #ffffff;
-                    display: block;
-                    margin-bottom: 6px;
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    border-bottom: 1px dashed rgba(255,255,255,0.4);
-                    padding-bottom: 4px;
-                    text-shadow: 0 1px 2px #000;
+                    color: #ffffff; display: block; margin-bottom: 6px; font-size: 0.95rem;
+                    font-weight: 700; border-bottom: 1px dashed rgba(255,255,255,0.4); padding-bottom: 4px; text-shadow: 0 1px 2px #000;
                 }
                 .tooltip-desc { color: #cccccc; font-size: 0.8rem; white-space: pre-wrap; word-break: break-word; }
             </style>
@@ -957,11 +944,7 @@ function _renderInvIntoContainer(container, profile, tab) {
         myInv = rawSrc.slice();
     }
     
-    myInv = myInv.filter(function (item) {
-        if (!item) return false;
-        var isFurn = item.type === 'furniture' || item.isFurniture;
-        return tab === 'furniture' ? isFurn : !isFurn;
-    });
+    // [수정 2] 빈 슬롯을 날려버리는 .filter() 로직을 삭제하여 20칸 레이아웃을 보존합니다.
 
     var html = '';
     for (var i = 0; i < 20; i++) {
@@ -1015,7 +998,7 @@ function _ensureInvPreviewTabs(charId) {
         if (slot.querySelector('.inv-preview-tab-btn')) return; 
 
         var gActive = (tab === 'general');
-        var btnBase = 'flex:1; padding:6px 0; font-size:0.75rem; font-family:\'Nanum Myeongjo\', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;';
+        var btnBase = 'flex:1; padding:6px 0; font-size:0.75rem; font-family:\\'Nanum Myeongjo\\', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;';
         
         var btnG = btnBase + (gActive
             ? 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);'
@@ -1027,11 +1010,11 @@ function _ensureInvPreviewTabs(charId) {
 
         slot.innerHTML =
             '<button class="inv-preview-tab-btn" data-tab="general"' +
-            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'general\')"' +
-            ' style="' + btnG + '">General</button>' +
+            ' onclick="switchInvPreviewTab(\\'' + charId + '\\',\\'general\\')"' +
+            ' style="' + btnG + '">Items</button>' +
             '<button class="inv-preview-tab-btn" data-tab="furniture"' +
-            ' onclick="switchInvPreviewTab(\'' + charId + '\',\'furniture\')"' +
-            ' style="' + btnF + '">Furniture</button>';
+            ' onclick="switchInvPreviewTab(\\'' + charId + '\\',\\'furniture\\')"' +
+            ' style="' + btnF + '">Storage</button>';
     });
 }
 
@@ -1039,9 +1022,13 @@ window.refreshInventoryPreviews = function () {
     if (typeof allProfiles === 'undefined') return;
 
     var seen = {};
+    var currentPhase = window.globalMainPhase || 0;
+
     allProfiles.forEach(function (profile) {
         var charId = profile.char_id.startsWith('char-') ? profile.char_id : 'char-' + profile.char_id;
-        if (profile.phase !== 0) return;
+        
+        // [수정 3] 무조건 1부만 렌더링하던 것을 현재 접속 중인 챕터 기준으로 변경
+        if (profile.phase !== currentPhase) return; 
         if (seen[charId]) return;
         seen[charId] = true;
 
