@@ -1089,3 +1089,41 @@ window.setGlobalPhase = function(val) {
         }
     }
 };
+
+// allProfiles 없어도 탭 버튼 보장
+function _ensureAllTabsOnLoad() {
+    document.querySelectorAll('.inv-tab-slot').forEach(function (slot) {
+        if (slot.querySelector('.inv-preview-tab-btn')) return;
+
+        // 부모 section에서 charId 추출
+        var section = slot.closest('section[id]');
+        if (!section) return;
+        var charId = section.id;
+
+        var tab          = _previewTabState[charId] || 'general';
+        var gActive      = (tab === 'general');
+        var activeStyle  = 'background:linear-gradient(135deg, #bbbbbb, #888888); color:#111; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.4);';
+        var inactiveStyle = 'background:transparent; color:#888; font-weight:400;';
+        var baseStyle    = "flex:1; padding:6px 0; font-size:0.75rem; font-family:'Nanum Myeongjo', serif; cursor:pointer; border:none; border-radius:20px; transition:all 0.2s ease; text-align:center; letter-spacing:1px; white-space:nowrap;";
+
+        var btnItems = document.createElement('button');
+        btnItems.className = 'inv-preview-tab-btn';
+        btnItems.setAttribute('data-tab', 'general');
+        btnItems.setAttribute('style', baseStyle + (gActive ? activeStyle : inactiveStyle));
+        btnItems.textContent = 'Items';
+        btnItems.onclick = function () { switchInvPreviewTab(charId, 'general'); };
+
+        var btnFurn = document.createElement('button');
+        btnFurn.className = 'inv-preview-tab-btn';
+        btnFurn.setAttribute('data-tab', 'furniture');
+        btnFurn.setAttribute('style', baseStyle + (!gActive ? activeStyle : inactiveStyle));
+        btnFurn.textContent = 'Storage';
+        btnFurn.onclick = function () { switchInvPreviewTab(charId, 'furniture'); };
+
+        slot.appendChild(btnItems);
+        slot.appendChild(btnFurn);
+    });
+}
+
+// 페이지 로드 후 500ms 뒤 실행 (initCharacterPages 완료 보장)
+setTimeout(_ensureAllTabsOnLoad, 500);
