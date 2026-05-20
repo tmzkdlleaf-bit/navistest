@@ -1,0 +1,988 @@
+/* =====================================================
+   raid.css — 사흉수 토벌 레이드 UI
+   배포용 스타일시트
+
+   [설계 방침]
+   - 흑백 팔레트: 모든 색상은 gray 계열 CSS 변수로 통일
+   - 이모지 없음: 텍스트·기호만 사용
+   - 영문 탭/레이블 사용 (컴포넌트 내부 한국어 콘텐츠는 유지)
+   - 폰트: Noto Sans KR (UI) / Noto Serif KR (장식 타이틀)
+===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [디자인 토큰] 흑백 팔레트 변수 정의
+   나중에 테마 변경 시 이 블록만 수정하면 전체 반영
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+    /* --- 배경 레이어 --- */
+    --raid-bg:          #111111;   /* 최상위 배경 */
+    --raid-panel:       #1a1a1a;   /* 사이드바·패널 */
+    --raid-card:        #222222;   /* 카드 기본 */
+    --raid-card-hover:  #2c2c2c;   /* 카드 호버 */
+    --raid-card-active: #363636;   /* 선택·활성 카드 */
+
+    /* --- 테두리 --- */
+    --raid-border-lo:   #2a2a2a;   /* 약한 구분선 */
+    --raid-border-md:   #3d3d3d;   /* 기본 테두리 */
+    --raid-border-hi:   #707070;   /* 강조 테두리 (선택, 포커스) */
+    --raid-border-top:  #888888;   /* 최상위 강조 (선택된 요소) */
+
+    /* --- 텍스트 --- */
+    --raid-text-hi:     #f0f0f0;   /* 헤드라인·강조 텍스트 */
+    --raid-text-body:   #c0c0c0;   /* 본문 텍스트 */
+    --raid-text-muted:  #808080;   /* 보조 텍스트 */
+    --raid-text-dim:    #505050;   /* 비활성·레이블 */
+
+    /* --- 시맨틱 색상 (흑백 범위 내 최소 의미색) --- */
+    --raid-ok:      #d0ffd8;       /* 성공·회복 텍스트 */
+    --raid-ok-bg:   rgba(180,255,190,0.05);
+    --raid-err:     #ffd8d8;       /* 실패·피해 텍스트 */
+    --raid-err-bg:  rgba(255,180,170,0.05);
+    --raid-warn:    #fdf4d0;       /* 경고·시스템 텍스트 */
+
+    /* --- HP/MP/BP 바 fill 색상 --- */
+    --raid-fill-hp: #b0b0b0;       /* HP 바 (밝은 회색) */
+    --raid-fill-mp: #888888;       /* MP 바 (중간 회색) */
+    --raid-fill-bp: #c8c8c8;       /* BP 바 (연한 회색) */
+
+    /* --- 타이포 --- */
+    --raid-font-ui:   'Noto Sans KR',  sans-serif;
+    --raid-font-deco: 'Noto Serif KR', serif;
+
+    /* --- 공간 --- */
+    --raid-radius-sm: 4px;
+    --raid-radius-md: 8px;
+    --raid-radius-lg: 12px;
+
+    /* --- 그림자 (흑백이므로 컬러 없음) --- */
+    --raid-shadow: 0 4px 16px rgba(0,0,0,0.55);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [기본 래퍼] 전체 레이아웃 그리드
+   헤더 / (메인 필드 + 사이드바) 2열 구조
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-wrap {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 300px;
+    grid-template-areas:
+        "header  header"
+        "field   sidebar";
+    min-height: 100vh;
+    background: var(--raid-bg);
+    font-family: var(--raid-font-ui);
+    color: var(--raid-text-body);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [헤더]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-header {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 24px;
+    background: var(--raid-panel);
+    border-bottom: 1px solid var(--raid-border-lo);
+}
+
+/* 타이틀: 한국어 제목이므로 장식 폰트 사용 */
+.raid-title {
+    font-family: var(--raid-font-deco);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    letter-spacing: 2px;
+}
+
+/* 라운드 배너: "ROUND N" 형식의 영문 레이블 */
+.raid-round-banner {
+    font-family: var(--raid-font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--raid-text-muted);
+    letter-spacing: 3px;
+}
+
+/* 후퇴 버튼 */
+.raid-retreat-btn {
+    background: transparent;
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-muted);
+    font-family: var(--raid-font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 18px;
+    border-radius: var(--raid-radius-sm);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: border-color .18s, color .18s;
+}
+.raid-retreat-btn:hover {
+    border-color: var(--raid-err);
+    color: var(--raid-err);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [필드] 보스 영역 + 파티원 영역을 세로로 분리
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-field {
+    grid-area: field;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* 구역 공통 패딩 */
+.raid-boss-zone,
+.raid-party-zone {
+    padding: 18px 20px;
+}
+
+/* 보스 구역: 어두운 배경으로 파티 구역과 구분 */
+.raid-boss-zone {
+    background: #141414;
+    border-bottom: 1px solid var(--raid-border-lo);
+}
+
+/* 파티 구역 */
+.raid-party-zone {
+    background: var(--raid-bg);
+    flex: 1;
+}
+
+/* 구역 레이블: "BOSS" / "PARTY" — 영문 소문자 추적 */
+.raid-zone-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--raid-text-dim);
+    letter-spacing: 4px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [파티원 그리드] auto-fill로 인원수에 따라 자동 조정
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-party-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    gap: 10px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [사이드바] 로그 영역 + 액션 패널로 구성
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    background: var(--raid-panel);
+    border-left: 1px solid var(--raid-border-lo);
+    overflow: hidden;
+}
+
+/* ── 로그 영역 ── */
+.raid-log-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-bottom: 1px solid var(--raid-border-lo);
+}
+
+/* "COMBAT LOG" 레이블 */
+.raid-log-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--raid-text-dim);
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 11px 0 10px;
+    border-bottom: 1px solid var(--raid-border-lo);
+    background: #161616;
+}
+
+/* 로그 스크롤 컨테이너 */
+.raid-log-scroll,
+#raid-combat-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--raid-border-md) transparent;
+}
+
+/* ── 로그 항목 스타일 ──
+   .log-ok  : 성공·회복 (밝은 녹계열)
+   .log-err : 실패·피해 (밝은 적계열)
+   .log-warn: 경고·시스템 (밝은 황계열)
+   .log-sys : 중요 시스템 메시지 (굵게) */
+.raid-log-scroll > div,
+#raid-combat-log > div {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--raid-text-body);
+    line-height: 1.8;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--raid-border-lo);
+}
+
+/* 색상 변형 클래스 */
+.log-ok   { color: var(--raid-ok)  !important; }
+.log-err  { color: var(--raid-err) !important; }
+.log-warn { color: var(--raid-warn)!important; }
+.log-sys  { color: var(--raid-text-hi) !important; font-weight: 700 !important; }
+
+/* ── 액션 패널 (사이드바 하단) ── */
+.raid-action-panel {
+    background: #161616;
+    min-height: 200px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [보스 카드]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#raidBossCard {
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-md);
+    border-radius: var(--raid-radius-md);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 보스 카드 상단 강조선 (그라데이션 없음 — 흑백 정책) */
+#raidBossCard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--raid-border-hi);
+}
+
+/* 보스 이름 */
+#raidBossCard .boss-name {
+    font-family: var(--raid-font-deco);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+}
+
+/* 보스 기믹 설명 */
+#raidBossCard .boss-gimmick {
+    font-size: 12px;
+    color: var(--raid-text-muted);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+/* ── HP 바 공통 구조 ── */
+.hp-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.hp-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--raid-text-dim);
+    min-width: 26px;
+    letter-spacing: 1px;
+}
+
+.hp-track {
+    flex: 1;
+    height: 8px;
+    background: var(--raid-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--raid-border-lo);
+}
+
+.hp-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--raid-fill-hp);
+    transition: width .55s ease;
+}
+
+.hp-num {
+    font-size: 12px;
+    color: var(--raid-text-muted);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: right;
+}
+
+/* 보스 현재 패턴 표시창 */
+#raidBossPattern {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--raid-text-body);
+    padding: 8px 12px;
+    border: 1px solid var(--raid-border-lo);
+    border-radius: var(--raid-radius-sm);
+    background: var(--raid-bg);
+    margin-top: 10px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [부위 카드] 클릭으로 공격 대상 선택
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#raidPartsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+    gap: 8px;
+}
+
+.raid-part-card {
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-lo);
+    border-radius: var(--raid-radius-sm);
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color .15s, transform .15s;
+    position: relative;
+}
+
+/* 호버: 테두리 밝게 + 살짝 위로 */
+.raid-part-card:not(.raid-part-broken):hover {
+    border-color: var(--raid-border-hi);
+    transform: translateY(-2px);
+}
+
+/* 선택된 부위: 흰 테두리 */
+.raid-part-card.selected {
+    border-color: var(--raid-border-top);
+    background: var(--raid-card-active);
+}
+
+/* 부위 이름 */
+.raid-part-card > .part-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    margin-bottom: 6px;
+}
+
+/* 부위 HP 바 (얇은 버전) */
+.part-hp-track {
+    height: 4px;
+    background: var(--raid-bg);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.part-hp-fill {
+    height: 100%;
+    background: var(--raid-fill-hp);
+    border-radius: 2px;
+    transition: width .4s ease;
+}
+
+/* 부위 HP 숫자 */
+[id^="raidPartNum_"] {
+    font-size: 11px;
+    color: var(--raid-text-muted);
+    font-weight: 500;
+}
+
+/* 파괴된 부위: 반투명 + 흑백 처리 */
+.raid-part-broken {
+    opacity: .3;
+    filter: grayscale(1);
+    cursor: not-allowed;
+}
+
+.raid-part-broken > .part-name {
+    text-decoration: line-through;
+    color: var(--raid-text-dim);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [파티원 카드]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-player-card {
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-lo);
+    border-radius: var(--raid-radius-md);
+    padding: 13px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+/* 현재 턴인 파티원 카드 강조 */
+.raid-player-card.active-turn {
+    border-color: var(--raid-border-top);
+    background: var(--raid-card-active);
+}
+
+/* 사망한 파티원 카드: 반투명 + 흑백 */
+.raid-player-dead {
+    opacity: .3;
+    filter: grayscale(1);
+}
+
+/* 파티원 이름 */
+.raid-player-card > .player-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* ── 스탯 바 행 (HP / MP / BP) ── */
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+/* 스탯 레이블 (HP / MP / BP) */
+.stat-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--raid-text-dim);
+    min-width: 20px;
+    letter-spacing: 1px;
+}
+
+/* 스탯 트랙 */
+.stat-track {
+    flex: 1;
+    height: 5px;
+    background: var(--raid-bg);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* HP fill: 가장 밝음 / MP: 중간 / BP: 연한 회색 */
+.stat-fill-hp { height: 100%; border-radius: 3px; background: var(--raid-fill-hp); transition: width .55s; }
+.stat-fill-mp { height: 100%; border-radius: 3px; background: var(--raid-fill-mp); transition: width .55s; }
+.stat-fill-bp { height: 100%; border-radius: 3px; background: var(--raid-fill-bp); transition: width .55s; }
+
+/* 스탯 수치 */
+.stat-val {
+    font-size: 10px;
+    color: var(--raid-text-muted);
+    min-width: 40px;
+    text-align: right;
+}
+
+/* 상태이상 뱃지 */
+.status-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-muted);
+    margin: 2px 2px 0 0;
+}
+
+.status-badge.debuff {
+    border-color: var(--raid-border-hi);
+    color: var(--raid-err);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [로비 UI] 보스 선택 + 참여자 확정 화면
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-lobby {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.raid-lobby-title {
+    font-family: var(--raid-font-deco);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    text-align: center;
+    letter-spacing: 5px;
+    margin-bottom: 8px;
+}
+
+.raid-lobby-subtitle {
+    font-size: 13px;
+    color: var(--raid-text-muted);
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+}
+
+/* 섹션 구분 레이블 */
+.raid-lobby-section-label {
+    font-size: 10px;
+    color: var(--raid-text-dim);
+    letter-spacing: 4px;
+    text-align: center;
+    margin: 20px 0 12px;
+}
+
+/* ── 보스 선택 카드 그리드 ── */
+.raid-boss-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.raid-boss-option {
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-md);
+    border-radius: var(--raid-radius-md);
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: border-color .2s, transform .2s;
+    text-align: center;
+}
+
+.raid-boss-option:hover {
+    border-color: var(--raid-border-hi);
+    transform: translateY(-2px);
+}
+
+/* 선택된 보스 옵션 */
+.raid-boss-option.selected {
+    border-color: var(--raid-border-top);
+    background: var(--raid-card-active);
+}
+
+.raid-boss-option-name {
+    font-family: var(--raid-font-deco);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.raid-boss-option-desc {
+    font-size: 11px;
+    color: var(--raid-text-muted);
+    margin-bottom: 6px;
+    line-height: 1.6;
+}
+
+.raid-boss-option-gimmick {
+    font-size: 10px;
+    color: var(--raid-text-dim);
+    line-height: 1.6;
+    padding: 6px 8px;
+    background: var(--raid-bg);
+    border-radius: var(--raid-radius-sm);
+    border: 1px solid var(--raid-border-lo);
+}
+
+/* ── 참여자 선택 목록 ── */
+.raid-member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.raid-member-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-md);
+    border-radius: var(--raid-radius-sm);
+    transition: border-color .18s;
+}
+
+/* 참여 확정된 멤버 행 */
+.raid-member-row.joined {
+    border-color: var(--raid-border-hi);
+    background: var(--raid-card-active);
+}
+
+.raid-member-name {
+    font-size: 13px;
+    color: var(--raid-text-hi);
+    font-weight: 500;
+    letter-spacing: .5px;
+}
+
+/* 참여/취소 버튼 */
+.raid-member-join-btn {
+    background: transparent;
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-muted);
+    font-family: var(--raid-font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all .2s;
+}
+.raid-member-join-btn:hover {
+    border-color: var(--raid-border-hi);
+    color: var(--raid-text-hi);
+}
+.raid-member-join-btn.joined {
+    border-color: var(--raid-border-top);
+    color: var(--raid-ok);
+}
+
+/* ── 토벌 시작 버튼 ── */
+.raid-lobby-start-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-hi);
+    color: var(--raid-text-hi);
+    font-family: var(--raid-font-deco);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    border-radius: var(--raid-radius-sm);
+    cursor: pointer;
+    transition: all .22s;
+}
+
+.raid-lobby-start-btn:hover:not(:disabled) {
+    background: var(--raid-card-active);
+    border-color: var(--raid-border-top);
+}
+
+.raid-lobby-start-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [액션 패널] 무기 선택 / 공격 / 보조 행동
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* 내 턴 헤더 */
+.action-turn-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--raid-border-lo);
+    letter-spacing: 1px;
+}
+
+/* 섹션 내부 레이블 */
+.action-section-label {
+    font-size: 10px;
+    color: var(--raid-text-dim);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    padding: 0 16px;
+}
+
+/* 공통 셀렉트 — 커스텀 화살표 */
+.raid-ctrl-select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23707070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-color: var(--raid-card);
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-hi);
+    font-family: var(--raid-font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 9px 34px 9px 12px;
+    border-radius: var(--raid-radius-sm);
+    width: 100%;
+    cursor: pointer;
+    transition: border-color .15s;
+}
+.raid-ctrl-select:hover { border-color: var(--raid-border-hi); }
+.raid-ctrl-select option { background: var(--raid-panel); color: var(--raid-text-hi); }
+
+/* 법력 소비 체크박스 행 */
+.raid-bp-check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--raid-text-muted);
+    cursor: pointer;
+    user-select: none;
+}
+.raid-bp-check-row input[type=checkbox] { accent-color: var(--raid-text-hi); cursor: pointer; }
+
+/* 공격 버튼 */
+#raidAttackBtn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 0 16px 12px;
+    padding: 12px;
+    background: var(--raid-card-active);
+    border: 1px solid var(--raid-border-hi);
+    color: var(--raid-text-hi);
+    font-family: var(--raid-font-ui);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: var(--raid-radius-sm);
+    cursor: pointer;
+    transition: all .15s;
+}
+#raidAttackBtn:hover:not(:disabled) {
+    background: #444;
+    border-color: var(--raid-border-top);
+}
+#raidAttackBtn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    border-color: var(--raid-border-lo);
+}
+
+/* 보조 행동 2열 그리드 (HEAL / WAIT) */
+.raid-sub-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 0 16px 16px;
+}
+
+.raid-sub-btn {
+    background: var(--raid-card);
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-muted);
+    font-family: var(--raid-font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 9px;
+    border-radius: var(--raid-radius-sm);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all .15s;
+}
+.raid-sub-btn:hover {
+    border-color: var(--raid-border-hi);
+    color: var(--raid-text-hi);
+}
+
+/* 대기 패널 (내 턴이 아닐 때) */
+.raid-wait-panel {
+    text-align: center;
+    padding: 26px 14px;
+    color: var(--raid-text-dim);
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 2;
+}
+
+/* 점 깜박이 애니메이션 */
+.raid-wait-dots {
+    display: inline-flex;
+    gap: 5px;
+    margin-top: 8px;
+}
+.raid-wait-dots span {
+    width: 5px; height: 5px;
+    background: var(--raid-text-dim);
+    border-radius: 50%;
+}
+.raid-wait-dots span:nth-child(1) { animation: raidDotBlink .85s ease-in-out infinite; }
+.raid-wait-dots span:nth-child(2) { animation: raidDotBlink .85s ease-in-out infinite .2s; }
+.raid-wait-dots span:nth-child(3) { animation: raidDotBlink .85s ease-in-out infinite .4s; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [결과 오버레이] 승리 / 패배 전체화면
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-result-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.92);
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    animation: raidFadeIn .4s ease;
+}
+
+.raid-result-title {
+    font-family: var(--raid-font-deco);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+    letter-spacing: 6px;
+}
+
+.raid-result-sub {
+    font-size: 13px;
+    color: var(--raid-text-muted);
+    letter-spacing: 3px;
+}
+
+.raid-result-reward {
+    border: 1px solid var(--raid-border-md);
+    padding: 16px 48px;
+    border-radius: var(--raid-radius-md);
+    text-align: center;
+}
+.raid-result-reward .r-label {
+    font-size: 10px;
+    color: var(--raid-text-dim);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+.raid-result-reward .r-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--raid-text-hi);
+}
+
+.raid-exit-btn {
+    background: none;
+    border: 1px solid var(--raid-border-md);
+    color: var(--raid-text-body);
+    font-family: var(--raid-font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 40px;
+    border-radius: var(--raid-radius-md);
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all .2s;
+}
+.raid-exit-btn:hover {
+    border-color: var(--raid-border-top);
+    color: var(--raid-text-hi);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [애니메이션]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* 플로팅 데미지 수치 */
+@keyframes raidFloat {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    20%  { opacity: 1; transform: translateY(-16px) scale(1.1); }
+    100% { opacity: 0; transform: translateY(-70px) scale(1.3); }
+}
+
+/* 피격 흔들림 */
+@keyframes raidShake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+}
+
+/* 피격 붉은 플래시 (흑백 테마: 실제 색상 없이 어두운 overlay) */
+@keyframes raidFlashHit {
+    0%,100% { box-shadow: inset 0 0 0 0 transparent; }
+    35%     { box-shadow: inset 0 0 32px 8px rgba(255,220,220,0.12); }
+}
+
+/* 회복 플래시 */
+@keyframes raidFlashHeal {
+    0%,100% { box-shadow: inset 0 0 0 0 transparent; }
+    35%     { box-shadow: inset 0 0 28px 6px rgba(220,255,230,0.10); }
+}
+
+/* 점 깜박이 */
+@keyframes raidDotBlink {
+    0%,100% { opacity: .2; }
+    50%     { opacity: 1; }
+}
+
+/* 결과 오버레이 페이드인 */
+@keyframes raidFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* 클래스로 적용 가능한 애니메이션 유틸 */
+.raid-shake     { animation: raidShake .4s ease; }
+.raid-flash-hit { animation: raidFlashHit .5s ease; }
+.raid-flash-heal{ animation: raidFlashHeal .5s ease; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [스크롤바] 얇고 어두운 색으로 통일
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.raid-field::-webkit-scrollbar,
+#raid-combat-log::-webkit-scrollbar,
+.raid-log-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+.raid-field::-webkit-scrollbar-track,
+#raid-combat-log::-webkit-scrollbar-track,
+.raid-log-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.raid-field::-webkit-scrollbar-thumb,
+#raid-combat-log::-webkit-scrollbar-thumb,
+.raid-log-scroll::-webkit-scrollbar-thumb {
+    background: var(--raid-border-md);
+    border-radius: 4px;
+}
+.raid-field::-webkit-scrollbar-thumb:hover,
+#raid-combat-log::-webkit-scrollbar-thumb:hover,
+.raid-log-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--raid-border-hi);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [반응형] 960px 이하: 사이드바를 하단으로 이동
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@media (max-width: 960px) {
+    .raid-wrap {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+        grid-template-areas:
+            "header"
+            "field"
+            "field"
+            "sidebar";
+    }
+    .raid-sidebar {
+        border-left: none;
+        border-top: 1px solid var(--raid-border-lo);
+        min-height: 300px;
+    }
+    .raid-party-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .raid-boss-select-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .raid-party-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .raid-title {
+        font-size: 15px;
+    }
+}
