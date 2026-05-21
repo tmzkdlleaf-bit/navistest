@@ -17,7 +17,7 @@
    ✏️  Supabase 대시보드(supabase.com)에서 복사해서 붙여넣으세요.
 ───────────────────────────────────────────────────────────────── */
 const SUPABASE_URL      = '여기에  URL';
-const SUPABASE_ANON_KEY = '여기에 anon 키';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdndzZXNpeXhocWZ2cnlsaWZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDA0MzMsImV4cCI6MjA5NDg3NjQzM30.wiU7jFQwPhEgSqcaRlnUkAibYDnpLDaS3vXfZBFoSL0';
 
 /* ✏️  imgbb.com에서 무료로 발급받은 API 키를 넣으세요 */
 const IMGBB_API_KEY     = '여기에 API 키';
