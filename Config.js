@@ -20,7 +20,7 @@ const SUPABASE_URL      = 'https://ypvwsesiyxhqfvrylify.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdndzZXNpeXhocWZ2cnlsaWZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDA0MzMsImV4cCI6MjA5NDg3NjQzM30.wiU7jFQwPhEgSqcaRlnUkAibYDnpLDaS3vXfZBFoSL0';
 
 /* ✏️  imgbb.com에서 무료로 발급받은 API 키를 넣으세요 */
-const IMGBB_API_KEY     = '여기에_IMGBB_API_KEY를_입력하세요';
+const IMGBB_API_KEY     = '7ee57c32e487d498f19ea931554d87e1';
 
 /* 이미지가 없을 때 표시할 기본 이미지 URL */
 const PLACEHOLDER_IMG  = 'https://placehold.co/60x60/1a1a1a/888888?text=?';
