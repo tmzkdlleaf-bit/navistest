@@ -16,11 +16,11 @@
    1. 외부 서비스 키
    ✏️  Supabase 대시보드(supabase.com)에서 복사해서 붙여넣으세요.
 ───────────────────────────────────────────────────────────────── */
-const SUPABASE_URL      = 'https://ypvwsesiyxhqfvrylify.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdndzZXNpeXhocWZ2cnlsaWZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDA0MzMsImV4cCI6MjA5NDg3NjQzM30.wiU7jFQwPhEgSqcaRlnUkAibYDnpLDaS3vXfZBFoSL0';
+const SUPABASE_URL      = '여기에  URL';
+const SUPABASE_ANON_KEY = '여기에 anon 키';
 
 /* ✏️  imgbb.com에서 무료로 발급받은 API 키를 넣으세요 */
-const IMGBB_API_KEY     = '7ee57c32e487d498f19ea931554d87e1';
+const IMGBB_API_KEY     = '여기에 API 키';
 
 /* 이미지가 없을 때 표시할 기본 이미지 URL */
 const PLACEHOLDER_IMG  = 'https://placehold.co/60x60/1a1a1a/888888?text=?';
@@ -42,7 +42,7 @@ try {
 ───────────────────────────────────────────────────────────────── */
 window.APP_CONFIG = {
     /* 관리자 이메일 목록 — 소지금 편집 등 특수 권한을 가집니다 */
-    ADMIN_EMAILS: ['qwerty@gmail.com'],
+    ADMIN_EMAILS: ['관리자 아이디'],
 
     /* 기본으로 표시할 타임라인 번호 (0 = 1부, 1 = 2부, ...) */
     DEFAULT_PHASE: 0
@@ -54,7 +54,7 @@ window.isAdmin = function () {
 };
 
 /* 관리자 이메일 목록 (Auth.js에서도 직접 참조합니다) */
-const adminEmails = ['qwerty@gmail.com'];
+const adminEmails = ['관리자 아이디'];
 
 
 /* ─────────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ const adminEmails = ['qwerty@gmail.com'];
    사용자가 로그인하면 자신의 캐릭터를 편집할 수 있게 됩니다.
 ───────────────────────────────────────────────────────────────── */
 const charOwners = {
-    'qwerty@gmail.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
+    'player2@example.com': 'char-p1',   /* 플레이어 1 → 캐릭터 가나 */
     'player2@example.com': 'char-p2',   /* 플레이어 2 → 캐릭터 다라 */
     'player3@example.com': 'char-p3',   /* 플레이어 3 → 캐릭터 마바 */
     'player4@example.com': 'char-p4',   /* 플레이어 4 → 캐릭터 사아 */
