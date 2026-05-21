@@ -503,6 +503,238 @@
     margin-bottom: 8px;
 }
 
+/* ── 전투 풀스크린 모달 ── */
+.combat-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.combat-modal-content {
+    width: 96%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* 전투 상단 헤더 */
+.combat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(215, 179, 61, 0.2);
+}
+
+/* 중앙 전투 스테이지 (P1 / 베팅 / P2) */
+.combat-middle-stage {
+    display: grid;
+    grid-template-columns: 220px 1fr 220px;
+    gap: 16px;
+    align-items: start;
+}
+
+/* 하단 로그 + 조작 패널 */
+.combat-bottom-stage {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 16px;
+    flex: 1;
+    min-height: 300px;
+}
+
+/* 전투 로그 */
+.enhanced-log {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 340px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #888;
+}
+
+/* 조작 패널 */
+.action-panel-container {
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(215, 179, 61, 0.15);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-title {
+    font-size: 0.8rem;
+    color: #555;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+}
+
+/* 베팅 패널 */
+.betting-panel {
+    background: rgba(10, 10, 10, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bet-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-color, #d7b33d);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.bet-action { display: flex; flex-direction: column; gap: 6px; }
+.my-money   { font-size: 0.8rem; color: #666; }
+.bet-input  { width: 80px !important; padding: 6px 8px !important; font-size: 0.9rem; }
+.btn-bet    { padding: 6px 14px !important; font-size: 0.85rem; white-space: nowrap; }
+
+.bettor-list-title { font-size: 0.75rem; color: #444; letter-spacing: 1px; margin-top: 4px; }
+.bettor-list       { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: #666; }
+
+/* 관전자 박스 */
+.arena-spectators-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+}
+.spectator-label { color: #444; letter-spacing: 1px; white-space: nowrap; }
+.spectator-tags  { display: flex; flex-wrap: wrap; gap: 6px; }
+.spectator-tag   { background: rgba(255,255,255,0.04); border: 1px solid #333; border-radius: 4px; padding: 2px 8px; color: #555; }
+
+/* 캐릭터 카드 */
+.combatant-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: default;
+}
+.combatant-img     { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.combatant-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 16px 10px 8px; }
+.combatant-name    { color: #ddd; font-size: 0.9rem; font-weight: bold; text-align: center; }
+
+/* 히트 애니메이션 */
+@keyframes hitShake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-6px); }
+    40%     { transform: translateX(6px); }
+    60%     { transform: translateX(-4px); }
+    80%     { transform: translateX(4px); }
+}
+.combatant-card.hit { animation: hitShake 0.5s ease; }
+.combatant-card.dying { opacity: 0.4; filter: grayscale(1); transition: all 0.8s; }
+.combatant-card.dead  { opacity: 0.2; }
+
+/* 피해 팝업 */
+.dmg-popup {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff4444;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255,0,0,0.5);
+    pointer-events: none;
+    animation: dmgFloat 1s ease forwards;
+    z-index: 100;
+}
+@keyframes dmgFloat {
+    0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
+}
+
+/* 전투 버튼 */
+.combat-btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 1px;
+}
+.combat-btn:hover           { opacity: 0.85; transform: translateY(-1px); }
+.combat-btn-attack          { background: linear-gradient(135deg, #8b1a1a, #5a0000); color: #ffb3b3; border: 1px solid #c03030; }
+.combat-btn-defend          { background: rgba(76,139,245,0.15); color: #7ab4ff; border: 1px solid rgba(76,139,245,0.3); }
+.combat-btn-dodge           { background: rgba(100,100,100,0.15); color: #aaa; border: 1px solid #444; }
+.combat-btn-surrender       { background: rgba(80,80,80,0.1); color: #666; border: 1px solid #333; }
+.combat-btn-flee            { background: transparent; color: #888; border: 1px solid #555; }
+
+/* 공격 무기 셀렉트 */
+.combat-select {
+    background: #0d0c0a;
+    border: 1px solid #2a2520;
+    border-radius: 6px;
+    color: #e0d8c0;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    outline: none;
+}
+.combat-select:focus { border-color: rgba(215,179,61,0.5); }
+
+/* 단체전 */
+.team-arena-stage   { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: start; }
+.team-side          { display: flex; flex-direction: column; gap: 10px; }
+.team-vs-divider    { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--accent-color, #d7b33d); font-size: 1.2rem; font-weight: bold; padding-top: 20px; }
+
+/* 단체전 팀 빌더 */
+.team-builder-grid  { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; margin-bottom: 20px; }
+.team-col           { background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 8px; padding: 16px; }
+.team-col-a         { border-color: rgba(215,179,61,0.2); }
+.team-col-divider   { display: flex; align-items: center; color: #444; font-size: 1.1rem; font-weight: bold; }
+.team-slot-list     { min-height: 60px; margin-bottom: 10px; }
+.team-add-btn       { width: 100%; padding: 8px; background: transparent; border: 1px dashed #333; color: #555; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+.team-add-btn:hover { border-color: #666; color: #888; }
+.team-start-btn     { width: 100%; padding: 14px; background: linear-gradient(135deg,#d7b33d,#b8952d); color: #111; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; letter-spacing: 2px; }
+
+/* 도주 버튼 (헤더) */
+.btn-flee {
+    background: transparent;
+    border: 1px solid #5a1a10;
+    color: #ff5a3a;
+    padding: 6px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .combat-middle-stage      { grid-template-columns: 1fr; }
+    .combat-bottom-stage      { grid-template-columns: 1fr; }
+    .betting-panel            { display: none; } /* 모바일에서 베팅 패널 숨김 */
+}
 
 /* ─────────────────────────────────────────────────────────────────
    반응형
