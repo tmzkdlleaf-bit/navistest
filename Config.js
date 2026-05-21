@@ -16,7 +16,7 @@
    1. 외부 서비스 키
    ✏️  Supabase 대시보드(supabase.com)에서 복사해서 붙여넣으세요.
 ───────────────────────────────────────────────────────────────── */
-const SUPABASE_URL      = 'https://여기에_SUPABASE_URL을_입력하세요.supabase.co';
+const SUPABASE_URL      = 'https://ypvwsesiyxhqfvrylify.supabase.co';
 const SUPABASE_ANON_KEY = '여기에_SUPABASE_ANON_KEY를_입력하세요';
 
 /* ✏️  imgbb.com에서 무료로 발급받은 API 키를 넣으세요 */
